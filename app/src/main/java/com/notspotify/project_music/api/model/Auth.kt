@@ -1,4 +1,4 @@
-package com.notspotify.project_music.server.model
+package com.notspotify.project_music.api.model
 
 import com.squareup.moshi.JsonClass
 

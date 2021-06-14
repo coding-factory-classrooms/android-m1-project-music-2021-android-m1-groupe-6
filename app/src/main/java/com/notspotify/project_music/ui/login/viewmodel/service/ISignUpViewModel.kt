@@ -1,4 +1,4 @@
-package com.notspotify.project_music.ui.sign.viewmodel.service
+package com.notspotify.project_music.ui.login.viewmodel.service
 
 interface ISignUpViewModel {
     fun createAccount()

@@ -1,4 +1,4 @@
-package com.notspotify.project_music.ui.sign
+package com.notspotify.project_music.ui.login
 
 import android.os.Build
 import android.os.Bundle
@@ -16,10 +16,10 @@ import com.notspotify.project_music.common.makeToast
 import com.notspotify.project_music.dal.DatabaseFactory
 import com.notspotify.project_music.dal.dao.AccountDAO
 import com.notspotify.project_music.factory.LoginViewModelFactory
-import com.notspotify.project_music.server.RetrofitFactory
-import com.notspotify.project_music.server.service.APIAccount
-import com.notspotify.project_music.ui.sign.viewmodel.LoginFragmentState
-import com.notspotify.project_music.ui.sign.viewmodel.LoginViewModel
+import com.notspotify.project_music.api.RetrofitFactory
+import com.notspotify.project_music.api.service.APIAccount
+import com.notspotify.project_music.ui.login.viewmodel.LoginFragmentState
+import com.notspotify.project_music.ui.login.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.login_fragment.*
 import kotlinx.android.synthetic.main.login_fragment.email
 

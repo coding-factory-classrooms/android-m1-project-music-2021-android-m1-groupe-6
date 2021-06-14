@@ -1,11 +1,11 @@
-package com.notspotify.project_music.vo
+package com.notspotify.project_music.model
 
 import com.squareup.moshi.JsonClass
 
 
 @JsonClass(generateAdapter = true)
-data class PageJSON(
-    val content: List<ArtistJSON>,
+data class Page(
+    val content: List<Artist>,
     val pageable: Pageable,
     val totalElements: Int,
     val totalPages: Int,

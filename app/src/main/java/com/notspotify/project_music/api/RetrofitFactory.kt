@@ -1,4 +1,4 @@
-package com.notspotify.project_music.server
+package com.notspotify.project_music.api
 
 import android.content.Context
 import android.util.Log

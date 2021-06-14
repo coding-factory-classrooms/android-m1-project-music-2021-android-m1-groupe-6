@@ -1,9 +1,9 @@
-package com.notspotify.project_music.vo
+package com.notspotify.project_music.model
 
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class ArtistJSON(
+data class Artist(
     val id: Long,
     val name: String,
     val genre: String,
