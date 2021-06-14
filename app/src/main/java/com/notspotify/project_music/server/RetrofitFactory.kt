@@ -19,9 +19,8 @@ class RetrofitFactory(val context: Context) {
                 val headers = request.headers.newBuilder().add("Authorization", "Bearer $token").build()
                 request = request.newBuilder().headers(headers).build()
             }
-            Log.v("test","tokensaved : $token")
+            Log.v("test","token use for request : $token")
             chain.proceed(request)
-
         }
 
         val clientBuilder = OkHttpClient.Builder().addInterceptor(headerAuthorizationInterceptor)

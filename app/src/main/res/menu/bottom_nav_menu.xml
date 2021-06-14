@@ -2,28 +2,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_home"
+        android:id="@+id/bibliotheque"
+        android:actionLayout="@layout/bibliotheque_fragment"
         android:icon="@drawable/ic_launcher_background"
-        android:title="Home" />
+        android:title="Bibliothèque" />
 
     <item
-        android:id="@+id/navigation_search"
+        android:id="@+id/playlist"
         android:icon="@drawable/ic_launcher_background"
-        android:title="Search" />
+        android:title="Playlists" />
 
     <item
-        android:id="@+id/navigation_create_post"
+        android:id="@+id/player"
         android:icon="@drawable/ic_launcher_background"
-        android:title="Create" />
+        android:title="Player" />
 
     <item
-        android:id="@+id/navigation_notification"
+        android:id="@+id/profile"
         android:icon="@drawable/ic_launcher_background"
-        android:title="notification" />
-
-    <item
-        android:id="@+id/navigation_profile"
-        android:icon="@drawable/ic_launcher_background"
-        android:title="Profile" />
+        android:title="Mon profil" />
 
 </menu>

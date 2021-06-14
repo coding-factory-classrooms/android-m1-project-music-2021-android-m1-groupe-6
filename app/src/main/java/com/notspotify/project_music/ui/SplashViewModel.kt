@@ -1,4 +1,4 @@
-package com.notspotify.project_music.ui.main.home.viewmodel
+package com.notspotify.project_music.ui
 
 import android.app.Application
 import android.content.Context

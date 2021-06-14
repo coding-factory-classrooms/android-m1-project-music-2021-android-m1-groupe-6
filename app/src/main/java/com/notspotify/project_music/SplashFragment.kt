@@ -12,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.notspotify.project_music.factory.SplashViewModelFactory
 import com.notspotify.project_music.server.RetrofitFactory
 import com.notspotify.project_music.server.service.APIAccount
-import com.notspotify.project_music.ui.main.home.viewmodel.SplashViewModel
+import com.notspotify.project_music.ui.SplashViewModel
 
 import java.lang.Exception
 
@@ -30,7 +30,8 @@ class SplashFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val apiAccount: APIAccount = RetrofitFactory(requireContext()).createService(APIAccount::class.java)
-        splashViewModel = ViewModelProvider(this, SplashViewModelFactory(requireActivity().application,apiAccount)).get(SplashViewModel::class.java)
+        splashViewModel = ViewModelProvider(this, SplashViewModelFactory(requireActivity().application,apiAccount)).get(
+            SplashViewModel::class.java)
 
         splashViewModel.getConnected().observe(this, Observer { userAuth(it) })
     }

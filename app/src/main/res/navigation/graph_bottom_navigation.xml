@@ -3,14 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/graph_bottom_navigation"
-    app:startDestination="@id/navigation_home">
+    app:startDestination="@id/player">
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.notspotify.project_music.ui.main.home.HomeFragment"
-        android:label="home_fragment"
-        tools:layout="@layout/home_fragment" />
+        android:id="@+id/player"
+        android:name="com.notspotify.project_music.ui.main.player.Player"
+        android:label="player_fragment"
+        tools:layout="@layout/player_fragment" />
     <fragment
-        android:id="@+id/navigation_profile"
-        android:name="com.notspotify.project_music.ui.main.ProfileFragment"
-        android:label="navigation_profile" />
+        android:id="@+id/bibliotheque"
+        android:name="com.notspotify.project_music.ui.main.bibliotheque.Bibliotheque"
+        android:label="bibliotheque_fragment"
+        tools:layout="@layout/bibliotheque_fragment" />
+    <fragment
+        android:id="@+id/profile"
+        android:name="com.notspotify.project_music.ui.main.profile.Profile"
+        android:label="profile_fragment"
+        tools:layout="@layout/profile_fragment" />
+    <fragment
+        android:id="@+id/playlist"
+        android:name="com.notspotify.project_music.ui.main.playlist.Playlist"
+        android:label="playlist_fragment"
+        tools:layout="@layout/playlist_fragment" />
 </navigation>
