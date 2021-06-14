@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Notspotify</string>
+    <string name="loginText">Content de vous revoir !</string>
+
+    <!-- Buttons Strings -->
+
+    <string name="connexion">Connexion</string>
+    <string name="inscription">Inscription</string>
+    <string name="deconexion">Deconnexion</string>
+    <string name="creationCompte">Créer un compte.</string>
+    <string name="mdp">Mot de passe</string>
+    <string name="mdp_c">Confirmez le mot de passe</string>
+    <string name="mdpOublié">Mot de passe oublié ?</string>
+    <string name="dejaUnCompte"><u>J\'ai déjà un compte</u></string>
+    <string name="pasDeCompte"><u>Je n\'ai pas de compte</u></string>
+    <string name="signup1">S\'inscrire</string>
+
+
+    <!-- Top Sign sentences -->
+
+    <string name="createYourAccount">Créez votre compte <![CDATA[ <font color="#FFCB00">Trap</font> ]]> ! </string>
+    <string name="moreAboutYou">Un peu plus sur <![CDATA[ <font color="#FFCB00">vous</font> ]]> ? </string>
+    <string name="choosePassword">Choisissez votre <![CDATA[ <font color="#FFCB00">mot de passe</font>]]>. </string>
+    <string name="welcome_back">Content de vous <![CDATA[ <font color="#FFCB00"> revoir </font> ]]> ! </string>
+    <string name="en_appuyant">En appuyant sur S’inscrire vous reconnaissez avoir lu notre <![CDATA[ <font color="#FFCB00"> Politique de confidentialité </font> ]]>et acceptez nos <![CDATA[ <font color="#FFCB00">Conditions générale d’utilisation. ]]></string>
+
+
+    <!-- Sign Up Hints-->
+
+    <string name="usernamelogin">Nom d\'utilisateur</string>
+    <string name="email">Email</string>
+    <string name="prenom">Prénom</string>
+    <string name="pseudo">\@pseudo</string>
+    <string name="ddn">Date de naissance</string>
+
+    <string-array name="genres">
+        <item>Homme</item>
+        <item>Femme</item>
+        <item>Autre</item>
+    </string-array>
+
+    <string-array name="settings">
+        <item>Nom d\'utilisateur</item>
+        <item>Email</item>
+        <item>Téléphone</item>
+        <item>Mot de passe</item>
+        <item>Date de naissance</item>
+        <item>Genre</item>
+    </string-array>
+
+
+
+    <string name="emailDejaUtiliser">Cette email est déjà utiliser.</string>
+    <string name="emailMalEcrit">L\'adresse email est mal formatée.</string>
+    <string name="emailOuMdpFaux">L\'email ou le mot de passe est incorrect.</string>
+    <string name="compteSuspendu">Ce compte à été suspendu par un administrateur.</string>
+
+
+
+    <string name="username_r">Nom d\'utilisateur</string>
+    <string name="email_r">Email</string>
+    <string name="tel_r">Téléphone</string>
+    <string name="mdp_r">Mot de passe</string>
+    <string name="ddn_r">Selectionnez  votre date de naissance</string>
+    <string name="gender_r">Genre</string>
+
+    <string name="reglages">Réglages</string>
+
+    <string name="votrecompte">Votre compte</string>
+
+    <string name="poster">Poster</string>
+
+
+</resources>

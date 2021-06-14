@@ -1,0 +1,75 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/black</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowBackground">@android:color/black</item>
+
+
+    </style>
+
+    <style name="FullscreenTheme" parent="AppTheme">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
+
+    <style name="en_appuyant">
+
+        <item name="android:textSize">
+            8sp
+        </item>
+
+        <item name="android:textColor">
+            #AEAEAE
+        </item>
+
+    </style>
+
+    <style name="input">
+        <item name="android:textColor">@color/whiteindark</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColorHint">@color/greyindark</item>
+        <item name="boxBackgroundColor">@color/black</item>
+        <item name="boxStrokeColor">@color/text_input_layout_stroke_color</item>
+        <item name="boxStrokeWidth">2dp</item>
+        <item name="colorControlNormal">#c5c5c5</item>
+        <item name="colorControlActivated">@color/whiteindark</item>
+        <item name="colorControlHighlight">@color/wellow</item>
+        <item name="android:editTextColor">@color/whiteindark</item>
+        <item name="endIconTint">@android:color/white</item>
+        <item name="prefixTextColor">@color/whiteindark</item>
+        <item name="hintTextAppearance">@style/HintStyle</item>
+        <item name="errorEnabled">true</item>
+    </style>
+
+    <style name="inputtext">
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:textSize">19sp</item>
+    </style>
+
+    <style name="HintStyle" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/whiteindark</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="date">
+        <item name="android:textSize">22dp</item>
+        <item name="android:textColorPrimary">@color/colorAccent</item>
+        <item name="android:colorControlNormal" >@color/colorAccent</item>
+    </style>
+
+
+
+
+</resources>
