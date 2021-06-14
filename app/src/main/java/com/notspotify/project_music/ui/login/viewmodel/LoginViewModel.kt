@@ -9,7 +9,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.notspotify.project_music.api.model.Auth
 import com.notspotify.project_music.api.service.APIAccount
-import com.notspotify.project_music.ui.login.viewmodel.service.ILoginViewModel
+import com.notspotify.project_music.ui.login.viewmodel.interfaces.ILoginViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

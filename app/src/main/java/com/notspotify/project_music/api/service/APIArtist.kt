@@ -5,7 +5,7 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface APIArtist {
-    @GET("api/data")
+    @GET("api/artists/")
     fun getArtists(): Call<List<Artist>>
 
     @GET("api/artist/{artistID}")

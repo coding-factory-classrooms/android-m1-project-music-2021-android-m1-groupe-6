@@ -1,4 +1,4 @@
-package com.notspotify.project_music.ui.login.viewmodel.service
+package com.notspotify.project_music.ui.login.viewmodel.interfaces
 
 import androidx.lifecycle.LiveData
 import com.notspotify.project_music.ui.login.viewmodel.LoginFragmentState

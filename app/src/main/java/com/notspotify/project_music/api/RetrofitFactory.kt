@@ -16,7 +16,7 @@ class RetrofitFactory(val context: Context) {
             var request = chain.request()
             val token : String? = context.getSharedPreferences("ACCOUNT",Context.MODE_PRIVATE).getString("authToken",null)
             if(token != null){
-                val headers = request.headers.newBuilder().add("Authorization", "Bearer $token").build()
+                val headers = request.headers.newBuilder().add("Authorization", "Token $token").build()
                 request = request.newBuilder().headers(headers).build()
             }
             Log.v("test","token use for request : $token")

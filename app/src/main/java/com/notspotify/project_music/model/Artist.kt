@@ -6,7 +6,7 @@ import com.squareup.moshi.JsonClass
 data class Artist(
     val id: Long,
     val name: String,
-    val genre: String,
-    val songs: List<String>,
-    val profilePicture: String
+    val genre_name: String,
+    val songs: List<String>?,
+    val profilePicture: String?
 )

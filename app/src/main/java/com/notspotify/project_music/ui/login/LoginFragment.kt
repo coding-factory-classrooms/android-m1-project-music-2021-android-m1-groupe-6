@@ -38,7 +38,6 @@ class LoginFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val accountDAO :AccountDAO = DatabaseFactory.create(requireContext()).accountDAO()
         welcomeback.formatHtml(getString(R.string.welcome_back))
 
         loginViewModel = ViewModelProvider(viewModelStore,LoginViewModelFactory(RetrofitFactory(requireContext())
