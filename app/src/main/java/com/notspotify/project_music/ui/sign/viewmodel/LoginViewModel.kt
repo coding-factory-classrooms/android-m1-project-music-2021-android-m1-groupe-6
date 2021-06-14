@@ -39,8 +39,8 @@ class LoginViewModel(private val apiAccount: APIAccount, application: Applicatio
 
             @SuppressLint("CommitPrefEdits")
             override fun onResponse(call: Call<Auth.Response>, response: Response<Auth.Response>) {
-                if(response.code() == 401){
-                    state.postValue(LoginFragmentState.Failure("401"))
+                if(response.code() != 200){
+                    state.postValue(LoginFragmentState.Failure(response.code().toString()))
                 }else{
                     getApplication<Application>().getSharedPreferences("ACCOUNT",Context.MODE_PRIVATE).edit().putString("authToken",response.body()?.token).apply()
                     Log.d("test", "token ${response.body()?.token}");
