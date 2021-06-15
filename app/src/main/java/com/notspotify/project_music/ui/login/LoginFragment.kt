@@ -13,15 +13,13 @@ import androidx.navigation.fragment.findNavController
 import com.notspotify.project_music.R
 import com.notspotify.project_music.common.formatHtml
 import com.notspotify.project_music.common.makeToast
-import com.notspotify.project_music.dal.DatabaseFactory
-import com.notspotify.project_music.dal.dao.AccountDAO
 import com.notspotify.project_music.factory.LoginViewModelFactory
 import com.notspotify.project_music.api.RetrofitFactory
 import com.notspotify.project_music.api.service.APIAccount
 import com.notspotify.project_music.ui.login.viewmodel.LoginFragmentState
 import com.notspotify.project_music.ui.login.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.login_fragment.*
-import kotlinx.android.synthetic.main.login_fragment.email
+import kotlinx.android.synthetic.main.login_fragment.password
 
 
 class LoginFragment : Fragment() {
@@ -38,8 +36,6 @@ class LoginFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        welcomeback.formatHtml(getString(R.string.welcome_back))
-
         loginViewModel = ViewModelProvider(viewModelStore,LoginViewModelFactory(RetrofitFactory(requireContext())
             .createService(APIAccount::class.java), activity?.application!!
         )).get(LoginViewModel::class.java)
@@ -47,7 +43,7 @@ class LoginFragment : Fragment() {
         loginViewModel.getState().observe(viewLifecycleOwner, Observer { updateUI(it) })
 
         btn_signIn.setOnClickListener {
-            loginViewModel.connection(username.text.toString(), email.text.toString())
+            loginViewModel.connection(username.text.toString(), password.text.toString())
         }
     }
 

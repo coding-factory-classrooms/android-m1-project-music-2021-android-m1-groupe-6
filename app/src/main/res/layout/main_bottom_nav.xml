@@ -22,7 +22,7 @@
         android:id="@+id/nav_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="#000000"
+        android:background="@color/LightLavender"
         app:itemIconTint="@color/colorselector"
         app:itemTextColor="#FFFFFF"
         app:labelVisibilityMode="unlabeled"

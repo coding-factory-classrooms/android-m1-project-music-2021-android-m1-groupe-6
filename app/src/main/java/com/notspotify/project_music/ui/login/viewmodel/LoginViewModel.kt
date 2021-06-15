@@ -30,6 +30,7 @@ class LoginViewModel(private val apiAccount: APIAccount, application: Applicatio
     override fun getState(): LiveData<LoginFragmentState> = state
 
     override fun connection(userName : String, password: String){
+
         state.postValue(LoginFragmentState.Loading(""))
         apiAccount.getToken(Auth.Request()).enqueue(object : Callback<Auth.Response>{
             override fun onFailure(call: Call<Auth.Response>, t: Throwable) {

@@ -6,8 +6,7 @@
         android:id="@+id/bibliotheque"
         android:actionLayout="@layout/bibliotheque_fragment"
         android:icon="@drawable/ic_launcher_background"
-        android:title="Bibliothèque"
-        app:showAsAction="withText" />
+        android:title="Bibliothèque" />
 
     <item
         android:id="@+id/playlist"

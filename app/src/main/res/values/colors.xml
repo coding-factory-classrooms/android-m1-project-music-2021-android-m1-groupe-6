@@ -21,6 +21,13 @@
     <color name="greyindark">#878787</color>
     <color name="mtrl_textinput_default_box_stroke_color">#fff</color>
 
-    <color name="LightLavender">#EEEDFF</color>
+    <color name="LightLavender">#F6F5FF</color>
+    <color name="Lavender">#EEEDFF</color>
+
+    <color name="Lilac">#B0B4F6</color>
+    <color name="Aubergine">#370E8F</color>
+
+    <color name="Lime">#BAFFEE</color>
+    <color name="Forest">#327361</color>
 
 </resources>

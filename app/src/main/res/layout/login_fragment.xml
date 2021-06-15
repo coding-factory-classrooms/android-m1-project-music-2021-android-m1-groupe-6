@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/usernamelogin"
             android:inputType="textEmailAddress"
-            app:layout_constraintBottom_toTopOf="@+id/emailParent"
+            app:layout_constraintBottom_toTopOf="@+id/passwordParent"
             app:layout_constraintTop_toTopOf="parent"
             app:prefixText="\@"
             tools:layout_editor_absoluteX="0dp">
@@ -64,7 +64,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/emailParent"
+            android:id="@+id/passwordParent"
             style="@style/input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
             tools:layout_editor_absoluteX="0dp">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/email"
+                android:id="@+id/password"
                 style="@style/inputtext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
