@@ -7,6 +7,5 @@ data class Artist(
     val id: Long,
     val name: String,
     val genre_name: String,
-    val songs: List<String>?,
     val album_cover_url: String?,
 )

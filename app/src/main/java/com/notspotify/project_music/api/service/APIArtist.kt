@@ -8,7 +8,7 @@ interface APIArtist {
     @GET("api/artists/")
     fun getArtists(): Call<List<Artist>>
 
-    @GET("api/artist/{artistID}")
+    @GET("api/artists/{artistID}")
     fun getArtistsById(@Path(value = "artistID") artistID: Long): Call<Artist>
 
 }

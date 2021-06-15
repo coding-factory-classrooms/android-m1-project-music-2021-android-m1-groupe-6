@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:scrollbars="none"
     tools:context=".ui.main.profile.Profile">
 
     <LinearLayout
@@ -31,8 +32,9 @@
     </LinearLayout>
 
     <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="350dp"
+        android:layout_height="678dp"
+        android:scrollbars="none"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout">
@@ -47,12 +49,22 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/albumCover"
-                android:layout_width="315dp"
-                android:layout_height="463dp"
-                android:layout_marginTop="24dp"
-                tools:src="@tools:sample/avatars" />
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:elevation="10dp"
+                app:cardCornerRadius="16dp">
+
+                <ImageView
+                    android:id="@+id/albumCover"
+                    android:layout_width="315dp"
+                    android:layout_height="463dp"
+                    android:scaleType="centerCrop"
+                    android:scrollbars="none"
+                    tools:src="@tools:sample/avatars" />
+            </androidx.cardview.widget.CardView>
+
 
             <Space
                 android:layout_width="match_parent"
@@ -60,14 +72,16 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="100dp">
 
                 <TextView
                     android:id="@+id/titleSongs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Songs"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <Space
@@ -77,7 +91,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerSongs"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="300dp"
                     tools:itemCount="5"
                     tools:listitem="@layout/song" />
             </LinearLayout>

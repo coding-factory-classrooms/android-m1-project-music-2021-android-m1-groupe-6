@@ -5,30 +5,40 @@
 
     <data>
         <variable
-            name="artist"
-            type="com.notspotify.project_music.model.Artist" />
+            name="song"
+            type="com.notspotify.project_music.model.Song" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="22dp">
+        android:layout_marginBottom="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/border_radius"
             android:orientation="horizontal"
-            android:padding="5dp"
+            android:padding="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/profilePicture"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                tools:src="@tools:sample/avatars" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="10dp"
+                app:cardCornerRadius="8dp">
+
+                <ImageView
+                    android:id="@+id/songPicture"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    tools:src="@tools:sample/avatars" />
+            </androidx.cardview.widget.CardView>
+
+
 
             <Space
                 android:layout_width="22dp"

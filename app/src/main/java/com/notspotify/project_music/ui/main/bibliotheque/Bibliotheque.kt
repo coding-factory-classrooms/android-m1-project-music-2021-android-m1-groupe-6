@@ -7,7 +7,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.notspotify.project_music.ui.main.bibliotheque.viewmodel.BibliothequeViewModel
 import com.notspotify.project_music.R
@@ -18,6 +20,8 @@ import com.notspotify.project_music.factory.BibliothequeViewModelFactory
 import com.notspotify.project_music.model.Artist
 import com.notspotify.project_music.ui.main.bibliotheque.viewmodel.BibliothequetState
 import com.notspotify.project_music.ui.main.bibliotheque.viewmodel.adapter.ArtistAdapter
+import com.notspotify.project_music.ui.main.bibliotheque.viewmodel.adapter.OnArtistClickListener
+import com.notspotify.project_music.ui.main.profile.viewmodel.adapter.SongsAdapter
 import kotlinx.android.synthetic.main.bibliotheque_fragment.*
 
 class Bibliotheque : Fragment() {
@@ -43,7 +47,14 @@ class Bibliotheque : Fragment() {
 
         viewModel.getArtists();
 
-        adapter = ArtistAdapter(listArtists)
+        val onArtistClickListener: OnArtistClickListener = object : OnArtistClickListener {
+            override fun invoke(artistId: Long) {
+                findNavController().navigate(R.id.action_bibliotheque_to_profile,bundleOf(Pair("artistId", artistId)))
+            }
+
+        }
+
+        adapter = ArtistAdapter(listArtists,onArtistClickListener)
 
         recyclerArtists.adapter = adapter;
         recyclerArtists.layoutManager  = LinearLayoutManager(this.context)
@@ -62,12 +73,10 @@ class Bibliotheque : Fragment() {
                 makeToast("Loading")
             }
             is BibliothequetState.Success ->{
-                Log.d("test","adapter count : ${adapter.itemCount}")
                 Log.d("test","Add all artists ${state.artistes}")
                 listArtists.clear()
                 listArtists.addAll(state.artistes)
                 adapter.notifyDataSetChanged()
-                Log.d("test","adapter count : ${adapter.itemCount}")
             }
         }
     }

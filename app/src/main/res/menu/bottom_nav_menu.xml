@@ -19,7 +19,7 @@
         android:title="Player" />
 
     <item
-        android:id="@+id/profile"
+        android:id="@+id/userProfile"
         android:icon="@drawable/ic_launcher_background"
         android:title="Profile" />
 

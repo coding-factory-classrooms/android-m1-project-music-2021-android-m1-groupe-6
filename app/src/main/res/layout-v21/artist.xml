@@ -15,6 +15,7 @@
         android:layout_marginBottom="22dp">
 
         <LinearLayout
+            android:id="@+id/artistContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
@@ -22,11 +23,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/profilePicture"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                tools:src="@tools:sample/avatars" />
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                app:cardCornerRadius="50dp">
+
+                <ImageView
+                    android:id="@+id/profilePicture"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    tools:src="@tools:sample/avatars" />
+
+            </androidx.cardview.widget.CardView>
+
 
             <Space
                 android:layout_width="22dp"
