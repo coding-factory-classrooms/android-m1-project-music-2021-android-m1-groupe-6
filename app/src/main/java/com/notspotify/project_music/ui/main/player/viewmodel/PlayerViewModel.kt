@@ -33,6 +33,10 @@ sealed class PlayerViewModelState() {
 
 }
 
+const val ARTIST_PREF = "artistId"
+const val SONG_PREF = "songId"
+const val PLAYLIST_PREF = "playlistId"
+
 class PlayerViewModel(private val apiSong: APISong, val application: Application, private val songDAO: SongDAO) : ViewModel() {
 
     private val filesPath = "${application.filesDir.absolutePath}/"
@@ -125,6 +129,10 @@ class PlayerViewModel(private val apiSong: APISong, val application: Application
                         actualSongIndex = listSong.indexOfFirst { _song -> _song.id == song.id }
                         changeActualSong(actualSongIndex)
                         stateListSong.value = PlayerViewModelState.Success(listSong)
+                        application.getSharedPreferences("LAST_SONG", Context.MODE_PRIVATE).edit().putLong(
+                            PLAYLIST_PREF,-1).apply()
+                        application.getSharedPreferences("LAST_SONG", Context.MODE_PRIVATE).edit().putLong(
+                            ARTIST_PREF,song.artist).apply()
                     } else {
                         stateListSong.value = PlayerViewModelState.Failure("Empty list")
                     }
@@ -163,12 +171,20 @@ class PlayerViewModel(private val apiSong: APISong, val application: Application
         })
     }
 
-    fun getSongsPlaylistId(playlistId : Long) {
+    fun getSongsPlaylistId(playlistId : Long,songId : Long? = null) {
         listSong.addAll(songDAO.loadSongsByPlaylist(playlistId).map { songDAO -> Song(songDAO.songId,songDAO.name,songDAO.file,songDAO.duration,songDAO.created_at,songDAO.artist) })
         stateListSong.value = PlayerViewModelState.Success(listSong)
-        Log.d("test","LIST SONG : $listSong")
+        application.getSharedPreferences("LAST_SONG", Context.MODE_PRIVATE).edit().putLong(
+            PLAYLIST_PREF,playlistId).apply()
+        application.getSharedPreferences("LAST_SONG", Context.MODE_PRIVATE).edit().putLong(
+            ARTIST_PREF,-1).apply()
         if(listSong.isNotEmpty()){
-            changeActualSong(0)
+            val indexOfSong = listSong.indexOfFirst { _song -> _song.id == songId };
+            if(indexOfSong == -1){
+                changeActualSong(0)
+            }else{
+                changeActualSong(indexOfSong)
+            }
         }
 
     }
@@ -278,12 +294,22 @@ class PlayerViewModel(private val apiSong: APISong, val application: Application
     }
 
     private fun saveLastSongListen(){
-        application.getSharedPreferences("LAST_SONG", Context.MODE_PRIVATE).edit().putLong("song",listSong[actualSongIndex].id).apply()
+        application.getSharedPreferences("LAST_SONG", Context.MODE_PRIVATE).edit().putLong(SONG_PREF,listSong[actualSongIndex].id).apply()
     }
+
      fun loadLastSongListen(){
-        val lastSongId:Long = application.getSharedPreferences("LAST_SONG",Context.MODE_PRIVATE).getLong("song",-1)
-        if(lastSongId != -1L){
-            getSongById(lastSongId)
-        }
+        val lastSongId:Long = application.getSharedPreferences("LAST_SONG",Context.MODE_PRIVATE).getLong(
+            SONG_PREF,-1)
+        val artistId:Long = application.getSharedPreferences("LAST_SONG",Context.MODE_PRIVATE).getLong(
+            ARTIST_PREF,-1)
+        val playlistId:Long = application.getSharedPreferences("LAST_SONG",Context.MODE_PRIVATE).getLong(PLAYLIST_PREF,-1)
+
+         if(lastSongId == -1L) return
+
+         if(artistId != -1L){
+             getArtisSongsBySong(Song(lastSongId,"","",0,"",artistId))
+         }else if (playlistId != -1L){
+             getSongsPlaylistId(playlistId, lastSongId)
+         }
     }
 }
