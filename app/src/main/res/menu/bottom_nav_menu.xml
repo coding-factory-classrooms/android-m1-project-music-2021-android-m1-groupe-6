@@ -5,8 +5,8 @@
     <item
         android:id="@+id/bibliotheque"
         android:actionLayout="@layout/bibliotheque_fragment"
-        android:icon="@drawable/ic_launcher_background"
-        android:title="Bibliothèque" />
+        android:icon="@drawable/library"
+        android:title="Library" />
 
     <item
         android:id="@+id/playlist"
@@ -21,6 +21,6 @@
     <item
         android:id="@+id/profile"
         android:icon="@drawable/ic_launcher_background"
-        android:title="Mon profil" />
+        android:title="Profile" />
 
 </menu>
