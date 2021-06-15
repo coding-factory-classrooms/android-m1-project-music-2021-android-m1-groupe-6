@@ -44,7 +44,7 @@ class Playlist : Fragment() {
 
         val onPlaylistClickListener: OnPlaylistClickListener = object : OnPlaylistClickListener {
             override fun invoke(playlist: Playlist) {
-                findNavController().navigate(R.id.action_playlist_to_player,
+                findNavController().navigate(R.id.action_playlist_to_playlistInfoFragment,
                     bundleOf(Pair("playlistId", playlist.id))
                 )
             }

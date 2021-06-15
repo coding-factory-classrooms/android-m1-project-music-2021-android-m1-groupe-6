@@ -39,10 +39,22 @@
         <action
             android:id="@+id/action_playlist_to_player"
             app:destination="@id/player" />
+        <action
+            android:id="@+id/action_playlist_to_playlistInfoFragment"
+            app:destination="@id/playlistInfoFragment" />
     </fragment>
     <fragment
         android:id="@+id/userProfile"
         android:name="com.notspotify.project_music.UserProfile"
         android:label="user_profile_fragment"
         tools:layout="@layout/user_profile_fragment" />
+    <fragment
+        android:id="@+id/playlistInfoFragment"
+        android:name="com.notspotify.project_music.ui.main.playlistinfo.PlaylistInfoFragment"
+        android:label="playlist_info_fragment"
+        tools:layout="@layout/playlist_info_fragment" >
+        <action
+            android:id="@+id/action_playlistInfoFragment_to_player"
+            app:destination="@id/player" />
+    </fragment>
 </navigation>

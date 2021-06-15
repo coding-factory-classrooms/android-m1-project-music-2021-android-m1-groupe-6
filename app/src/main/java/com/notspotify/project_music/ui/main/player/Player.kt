@@ -70,13 +70,21 @@ class Player : Fragment() {
 
         arguments?.also {
 
+            var song: Song? = null
+            var playlistId: Long? = null
+
             it.get("songId")?.let {
-                val song: Song = it as Song
-                viewModel.getArtisSongsBySong(song)
+                song = it as Song
             }
 
-            it.getLong("playlistId")?.let {
-                viewModel.getSongsPlaylistId(it)
+            it.getString("playlistId")?.let {
+                playlistId = it.toLong()
+            }
+
+            playlistId?.let {
+                viewModel.getSongsPlaylistId(it,song?.id)
+            }?: run{
+                song?.let {  viewModel.getArtisSongsBySong(it) }
             }
 
         } ?: run {
