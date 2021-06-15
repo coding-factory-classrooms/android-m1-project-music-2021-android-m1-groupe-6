@@ -29,8 +29,6 @@
         <action
             android:id="@+id/action_splashFragment_to_main"
             app:destination="@id/bottomNav"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
             app:popUpTo="@id/splashFragment"
             app:popUpToInclusive="true" />
     </fragment>

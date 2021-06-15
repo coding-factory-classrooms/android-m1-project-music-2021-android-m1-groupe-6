@@ -21,4 +21,6 @@
     <color name="greyindark">#878787</color>
     <color name="mtrl_textinput_default_box_stroke_color">#fff</color>
 
+    <color name="LightLavender">#EEEDFF</color>
+
 </resources>

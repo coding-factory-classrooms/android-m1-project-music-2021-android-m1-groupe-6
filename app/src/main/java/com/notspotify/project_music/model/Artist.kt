@@ -8,5 +8,5 @@ data class Artist(
     val name: String,
     val genre_name: String,
     val songs: List<String>?,
-    val profilePicture: String?
+    val album_cover_url: String?,
 )

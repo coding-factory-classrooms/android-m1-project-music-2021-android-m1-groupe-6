@@ -8,26 +8,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.notspotify.project_music.ui.main.bibliotheque.viewmodel.BibliothequeViewModel
 import com.notspotify.project_music.R
 import com.notspotify.project_music.api.RetrofitFactory
-import com.notspotify.project_music.api.service.APIAccount
 import com.notspotify.project_music.api.service.APIArtist
 import com.notspotify.project_music.common.makeToast
 import com.notspotify.project_music.factory.BibliothequeViewModelFactory
-import com.notspotify.project_music.factory.LoginViewModelFactory
-import com.notspotify.project_music.ui.login.viewmodel.LoginFragmentState
-import com.notspotify.project_music.ui.login.viewmodel.LoginViewModel
+import com.notspotify.project_music.model.Artist
 import com.notspotify.project_music.ui.main.bibliotheque.viewmodel.BibliothequetState
+import com.notspotify.project_music.ui.main.bibliotheque.viewmodel.adapter.ArtistAdapter
+import kotlinx.android.synthetic.main.bibliotheque_fragment.*
 
 class Bibliotheque : Fragment() {
-
-    companion object {
-        fun newInstance() = Bibliotheque()
-    }
-
     private lateinit var viewModel: BibliothequeViewModel
+
+    private lateinit var adapter: ArtistAdapter
+    private var listArtists = mutableListOf<Artist>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,9 +40,16 @@ class Bibliotheque : Fragment() {
             .createService(APIArtist::class.java), activity?.application!!
         )
         ).get(BibliothequeViewModel::class.java)
+
         viewModel.getArtists();
 
+        adapter = ArtistAdapter(listArtists)
+
+        recyclerArtists.adapter = adapter;
+        recyclerArtists.layoutManager  = LinearLayoutManager(this.context)
+
         viewModel.getState().observe(viewLifecycleOwner, Observer { updateUI(it) })
+
 
     }
 
@@ -58,7 +62,12 @@ class Bibliotheque : Fragment() {
                 makeToast("Loading")
             }
             is BibliothequetState.Success ->{
+                Log.d("test","adapter count : ${adapter.itemCount}")
                 Log.d("test","Add all artists ${state.artistes}")
+                listArtists.clear()
+                listArtists.addAll(state.artistes)
+                adapter.notifyDataSetChanged()
+                Log.d("test","adapter count : ${adapter.itemCount}")
             }
         }
     }
