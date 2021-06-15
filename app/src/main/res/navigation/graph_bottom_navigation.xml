@@ -16,17 +16,17 @@
         tools:layout="@layout/bibliotheque_fragment" >
         <action
             android:id="@+id/action_bibliotheque_to_profile"
-            app:destination="@id/profile" />
+            app:destination="@id/profile"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_left" />
     </fragment>
     <fragment
         android:id="@+id/profile"
         android:name="com.notspotify.project_music.ui.main.profile.Profile"
         android:label="profile_fragment"
-        tools:layout="@layout/profile_fragment" >
-        <action
-            android:id="@+id/action_profile_to_bibliotheque"
-            app:destination="@id/bibliotheque" />
-    </fragment>
+        tools:layout="@layout/profile_fragment" />
     <fragment
         android:id="@+id/playlist"
         android:name="com.notspotify.project_music.ui.main.playlist.Playlist"
