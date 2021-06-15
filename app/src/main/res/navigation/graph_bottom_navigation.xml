@@ -26,7 +26,11 @@
         android:id="@+id/profile"
         android:name="com.notspotify.project_music.ui.main.profile.Profile"
         android:label="profile_fragment"
-        tools:layout="@layout/profile_fragment" />
+        tools:layout="@layout/profile_fragment" >
+        <action
+            android:id="@+id/action_profile_to_player"
+            app:destination="@id/player" />
+    </fragment>
     <fragment
         android:id="@+id/playlist"
         android:name="com.notspotify.project_music.ui.main.playlist.Playlist"

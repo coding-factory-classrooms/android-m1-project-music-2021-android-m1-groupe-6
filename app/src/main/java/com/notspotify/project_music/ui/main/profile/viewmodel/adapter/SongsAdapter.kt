@@ -10,7 +10,7 @@ import com.notspotify.project_music.databinding.SongBinding
 import com.notspotify.project_music.model.Song
 import kotlinx.android.synthetic.main.profile_fragment.*
 
-class SongsAdapter (val songs: List<Song>)  : RecyclerView.Adapter<SongsAdapter.ViewHolder>() {
+class SongsAdapter (val songs: List<Song>,private val onSongClickListener: OnSongClickListener)  : RecyclerView.Adapter<SongsAdapter.ViewHolder>() {
     var albumCover = "";
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
@@ -25,6 +25,10 @@ class SongsAdapter (val songs: List<Song>)  : RecyclerView.Adapter<SongsAdapter.
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val actualSong = songs[position]
         holder.binding.song = actualSong
+
+        holder.binding.songContainer.setOnClickListener {
+            onSongClickListener.invoke(actualSong)
+        }
 
         Glide.with(holder.itemView)
             .load(albumCover)

@@ -20,9 +20,11 @@ import com.notspotify.project_music.factory.ProfileViewModelFactory
 import com.notspotify.project_music.model.Artist
 import com.notspotify.project_music.model.Song
 import com.notspotify.project_music.ui.main.bibliotheque.viewmodel.adapter.ArtistAdapter
+import com.notspotify.project_music.ui.main.bibliotheque.viewmodel.adapter.OnArtistClickListener
 import com.notspotify.project_music.ui.main.profile.viewmodel.adapter.SongsAdapter
 import com.notspotify.project_music.ui.main.profile.viewmodel.ArtistProfileState
 import com.notspotify.project_music.ui.main.profile.viewmodel.SongsProfileState
+import com.notspotify.project_music.ui.main.profile.viewmodel.adapter.OnSongClickListener
 import kotlinx.android.synthetic.main.bibliotheque_fragment.*
 import kotlinx.android.synthetic.main.profile_fragment.*
 
@@ -56,7 +58,14 @@ class Profile : Fragment() {
                 .createService(APIArtist::class.java))
         ).get(ProfileViewModel::class.java)
 
-        songsAdapter = SongsAdapter(listSongs)
+        val onSongClickListener: OnSongClickListener = object : OnSongClickListener {
+            override fun invoke(song: Song) {
+                findNavController().navigate(R.id.action_profile_to_player,bundleOf(Pair("songId", song)))
+            }
+
+        }
+
+        songsAdapter = SongsAdapter(listSongs,onSongClickListener)
 
         recyclerSongs.adapter = songsAdapter;
         recyclerSongs.layoutManager  = LinearLayoutManager(this.context)
