@@ -13,6 +13,6 @@ class SplashViewModel(application: Application, private val apiAccount: APIAccou
 
     fun isConnected(){
         val token : String? = getApplication<Application>().getSharedPreferences("ACCOUNT",Context.MODE_PRIVATE).getString("authToken",null)
-        _isConnected.postValue(token == null)
+        _isConnected.postValue(token != null)
     }
 }
