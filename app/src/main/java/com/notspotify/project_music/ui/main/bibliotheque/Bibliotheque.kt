@@ -21,7 +21,6 @@ import com.notspotify.project_music.model.Artist
 import com.notspotify.project_music.ui.main.bibliotheque.viewmodel.BibliothequetState
 import com.notspotify.project_music.ui.main.bibliotheque.viewmodel.adapter.ArtistAdapter
 import com.notspotify.project_music.ui.main.bibliotheque.viewmodel.adapter.OnArtistClickListener
-import com.notspotify.project_music.ui.main.profile.viewmodel.adapter.SongsAdapter
 import kotlinx.android.synthetic.main.bibliotheque_fragment.*
 
 class Bibliotheque : Fragment() {

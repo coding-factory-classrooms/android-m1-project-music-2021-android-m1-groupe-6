@@ -8,7 +8,6 @@ import com.bumptech.glide.Glide
 import com.notspotify.project_music.R
 import com.notspotify.project_music.databinding.ArtistBinding
 import com.notspotify.project_music.model.Artist
-import com.notspotify.project_music.ui.main.profile.viewmodel.adapter.SongsAdapter
 
 class ArtistAdapter (val artists: List<Artist>, private val onArtistClickListener: OnArtistClickListener)  : RecyclerView.Adapter<ArtistAdapter.ViewHolder>()  {
 

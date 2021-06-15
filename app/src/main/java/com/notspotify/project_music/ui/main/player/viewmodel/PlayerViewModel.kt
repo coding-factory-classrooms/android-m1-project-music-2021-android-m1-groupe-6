@@ -17,8 +17,9 @@ import retrofit2.Response
 import java.io.FileOutputStream
 import java.io.InputStream
 import android.app.Application
+import android.content.Context
+import com.notspotify.project_music.dal.dao.SongDAO
 import kotlinx.coroutines.*
-import okhttp3.internal.wait
 import java.io.File
 import java.lang.Runnable
 
@@ -32,27 +33,24 @@ sealed class PlayerViewModelState() {
 
 }
 
-class PlayerViewModel(private val apiSong: APISong, val application: Application) : ViewModel() {
+class PlayerViewModel(private val apiSong: APISong, val application: Application, private val songDAO: SongDAO) : ViewModel() {
 
-    private val state = MutableLiveData<PlayerViewModelState>()
+    private val filesPath = "${application.filesDir.absolutePath}/"
+
     private val mediaPlayer = MediaPlayer()
     private val progressHandler = Handler(Looper.getMainLooper())
     private val progressHandlerRunable: Runnable
 
     private lateinit var downloadCoroutine: Job
 
-    private val filesPath = "${application.filesDir.absolutePath}/"
-
     private var listSong = mutableListOf<Song>()
-
     private var actualSongIndex: Int = 0
+
     private val stateListSong = MutableLiveData<PlayerViewModelState>()
     private val isPlaying = MutableLiveData<Boolean>()
     private val songProgression = MutableLiveData<Int>()
-
     private val actualSong = MutableLiveData<PlayerViewModelState>()
 
-    fun getState(): LiveData<PlayerViewModelState> = state
     fun getIsPlaying(): LiveData<Boolean> = isPlaying
     fun getSongProgression(): LiveData<Int> = songProgression
     fun getStateListSong(): LiveData<PlayerViewModelState> = stateListSong
@@ -61,8 +59,7 @@ class PlayerViewModel(private val apiSong: APISong, val application: Application
     init {
 
         mediaPlayer.setOnCompletionListener {
-            Log.d("test","Auto change")
-            //nextSong()
+            nextSong()
         }
 
         progressHandlerRunable = Runnable{
@@ -70,10 +67,7 @@ class PlayerViewModel(private val apiSong: APISong, val application: Application
         }
     }
 
-    fun updateSongProgression(){
-        songProgression.value = mediaPlayer.currentPosition
-        progressHandler.postDelayed(progressHandlerRunable,1000)
-    }
+    // Song list
 
     fun nextSong() {
         if (actualSongIndex < listSong.size - 1) {
@@ -96,7 +90,7 @@ class PlayerViewModel(private val apiSong: APISong, val application: Application
 
         mediaPlayer.reset()
 
-        StopDownload()
+        stopDownload()
 
         val file = File(getSongPath(song))
 
@@ -105,8 +99,10 @@ class PlayerViewModel(private val apiSong: APISong, val application: Application
         }else{
             loadSongCoroutine(song)
         }
-
+        saveLastSongListen()
     }
+
+    // Requests
 
     fun getArtisSongsBySong(song : Song) {
         stateListSong.value = PlayerViewModelState.Loading("")
@@ -168,8 +164,16 @@ class PlayerViewModel(private val apiSong: APISong, val application: Application
     }
 
     fun getSongsPlaylistId(playlistId : Long) {
+        listSong.addAll(songDAO.loadSongsByPlaylist(playlistId).map { songDAO -> Song(songDAO.songId,songDAO.name,songDAO.file,songDAO.duration,songDAO.created_at,songDAO.artist) })
+        stateListSong.value = PlayerViewModelState.Success(listSong)
+        Log.d("test","LIST SONG : $listSong")
+        if(listSong.isNotEmpty()){
+            changeActualSong(0)
+        }
 
     }
+
+    // Media Control
 
     fun togglePlay(){
         if(mediaPlayer.isPlaying){
@@ -206,6 +210,13 @@ class PlayerViewModel(private val apiSong: APISong, val application: Application
     fun changeSongTimeStamp(time:Int){
         mediaPlayer.seekTo(time)
     }
+
+    fun updateSongProgression(){
+        songProgression.value = mediaPlayer.currentPosition
+        progressHandler.postDelayed(progressHandlerRunable,1000)
+    }
+
+    // Songs File
 
     fun saveFile(body: ResponseBody?, path: String):String{
         if (body==null)
@@ -258,11 +269,21 @@ class PlayerViewModel(private val apiSong: APISong, val application: Application
         }
     }
 
-    private fun StopDownload(){
+    private fun stopDownload(){
         if(!this::downloadCoroutine.isInitialized) return
 
         if(downloadCoroutine.isActive){
             downloadCoroutine.cancel()
+        }
+    }
+
+    private fun saveLastSongListen(){
+        application.getSharedPreferences("LAST_SONG", Context.MODE_PRIVATE).edit().putLong("song",listSong[actualSongIndex].id).apply()
+    }
+     fun loadLastSongListen(){
+        val lastSongId:Long = application.getSharedPreferences("LAST_SONG",Context.MODE_PRIVATE).getLong("song",-1)
+        if(lastSongId != -1L){
+            getSongById(lastSongId)
         }
     }
 }

@@ -8,7 +8,8 @@ import com.bumptech.glide.Glide
 import com.notspotify.project_music.R
 import com.notspotify.project_music.databinding.SongBinding
 import com.notspotify.project_music.model.Song
-import kotlinx.android.synthetic.main.profile_fragment.*
+
+
 
 class SongsAdapter (val songs: List<Song>,private val onSongClickListener: OnSongClickListener)  : RecyclerView.Adapter<SongsAdapter.ViewHolder>() {
     var albumCover = "";
@@ -28,6 +29,10 @@ class SongsAdapter (val songs: List<Song>,private val onSongClickListener: OnSon
 
         holder.binding.songContainer.setOnClickListener {
             onSongClickListener.invoke(actualSong)
+        }
+
+        holder.binding.addToPlaylist.setOnClickListener {
+            onSongClickListener.addPlaylist(actualSong)
         }
 
         Glide.with(holder.itemView)

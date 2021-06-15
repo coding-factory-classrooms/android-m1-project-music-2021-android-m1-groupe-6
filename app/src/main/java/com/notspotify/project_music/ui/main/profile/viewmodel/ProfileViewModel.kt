@@ -1,16 +1,16 @@
 package com.notspotify.project_music.ui.main.profile.viewmodel
 
-import android.app.Application
-import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.notspotify.project_music.api.service.APIArtist
 import com.notspotify.project_music.api.service.APISong
+import com.notspotify.project_music.dal.dao.PlaylistDAO
+import com.notspotify.project_music.dal.dao.SongDAO
+import com.notspotify.project_music.dal.entity.Playlist
+import com.notspotify.project_music.dal.entity.SongEntity
 import com.notspotify.project_music.model.Artist
 import com.notspotify.project_music.model.Song
-import com.notspotify.project_music.ui.main.bibliotheque.viewmodel.BibliothequetState
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,13 +27,21 @@ sealed class SongsProfileState {
     data class Failure(val errorMessage: String) : SongsProfileState()
 }
 
-class ProfileViewModel(private val apiSongs: APISong,private val apiArtist: APIArtist) : ViewModel(), IProfileViewModel {
+sealed class PlaylistState {
+    data class Success(val playlist : List<Playlist>, val song:Song): PlaylistState()
+    data class Loading(val message : String): PlaylistState()
+    data class Failure(val errorMessage: String) : PlaylistState()
+}
+
+class ProfileViewModel(private val apiSongs: APISong,private val apiArtist: APIArtist, private val playlistDAO: PlaylistDAO, private val songDAO: SongDAO) : ViewModel(), IProfileViewModel {
 
     private var artistState: MutableLiveData<ArtistProfileState> = MutableLiveData()
     private var songsState: MutableLiveData<SongsProfileState> = MutableLiveData()
+    private var playlistState: MutableLiveData<PlaylistState> = MutableLiveData()
 
     override fun getArtistState(): LiveData<ArtistProfileState> = artistState
     override fun getSongsState(): LiveData<SongsProfileState> = songsState
+    fun getPlaylistState(): LiveData<PlaylistState> = playlistState
 
 
     override fun getSongsFromArtistId(id: Long) {
@@ -63,6 +71,14 @@ class ProfileViewModel(private val apiSongs: APISong,private val apiArtist: APIA
             }
 
         })
+    }
+
+    fun getPlaylist(song:Song){
+        playlistState.value = PlaylistState.Success(playlistDAO.loadAll(),song)
+    }
+
+    fun addSongToPlaylist(song:Song,playlistId: Long){
+        songDAO.insert(SongEntity(null,song.name,playlistId,song.id,song.file,song.duration,song.created_at,song.artist))
     }
 
 }

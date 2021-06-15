@@ -11,22 +11,25 @@ import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.notspotify.project_music.ui.main.profile.viewmodel.ProfileViewModel
 import com.notspotify.project_music.R
 import com.notspotify.project_music.api.RetrofitFactory
 import com.notspotify.project_music.api.service.APIArtist
 import com.notspotify.project_music.api.service.APISong
+import com.notspotify.project_music.dal.DatabaseFactory
+import com.notspotify.project_music.dal.entity.Playlist
 import com.notspotify.project_music.factory.ProfileViewModelFactory
 import com.notspotify.project_music.model.Artist
 import com.notspotify.project_music.model.Song
-import com.notspotify.project_music.ui.main.bibliotheque.viewmodel.adapter.ArtistAdapter
-import com.notspotify.project_music.ui.main.bibliotheque.viewmodel.adapter.OnArtistClickListener
-import com.notspotify.project_music.ui.main.profile.viewmodel.adapter.SongsAdapter
 import com.notspotify.project_music.ui.main.profile.viewmodel.ArtistProfileState
+import com.notspotify.project_music.ui.main.profile.viewmodel.PlaylistState
 import com.notspotify.project_music.ui.main.profile.viewmodel.SongsProfileState
 import com.notspotify.project_music.ui.main.profile.viewmodel.adapter.OnSongClickListener
-import kotlinx.android.synthetic.main.bibliotheque_fragment.*
+import com.notspotify.project_music.ui.main.profile.viewmodel.adapter.SongsAdapter
 import kotlinx.android.synthetic.main.profile_fragment.*
+import kotlinx.android.synthetic.main.song.*
+import java.util.ArrayList
 
 class Profile : Fragment() {
 
@@ -55,12 +58,16 @@ class Profile : Fragment() {
         viewModel = ViewModelProvider(viewModelStore, ProfileViewModelFactory(
             RetrofitFactory(requireContext())
                 .createService(APISong::class.java), RetrofitFactory(requireContext())
-                .createService(APIArtist::class.java))
+                .createService(APIArtist::class.java),DatabaseFactory.create(requireContext()).playlistDAO(),DatabaseFactory.create(requireContext()).songDAO())
         ).get(ProfileViewModel::class.java)
 
         val onSongClickListener: OnSongClickListener = object : OnSongClickListener {
             override fun invoke(song: Song) {
                 findNavController().navigate(R.id.action_profile_to_player,bundleOf(Pair("songId", song)))
+            }
+
+            override fun addPlaylist(song: Song) {
+                viewModel.getPlaylist(song)
             }
 
         }
@@ -75,9 +82,24 @@ class Profile : Fragment() {
 
         viewModel.getArtistState().observe(viewLifecycleOwner, {updateArtistUI(it)})
         viewModel.getSongsState().observe(viewLifecycleOwner, {updateSongsUI(it)})
+        viewModel.getPlaylistState().observe(viewLifecycleOwner, {onPlaylistStateChange(it)})
 
         btnReturn.setOnClickListener{
             findNavController().popBackStack()
+        }
+    }
+
+    private fun onPlaylistStateChange(state:PlaylistState){
+        when(state){
+            is PlaylistState.Failure -> {
+
+            }
+            is PlaylistState.Loading -> {
+
+            }
+            is PlaylistState.Success -> {
+                openPlaylistDialog(state.playlist,state.song)
+            }
         }
     }
 
@@ -121,6 +143,19 @@ class Profile : Fragment() {
                 songsAdapter.notifyDataSetChanged()
             }
         }
+    }
+
+    private fun openPlaylistDialog(playlists:List<Playlist>,song:Song){
+        val playlistNames = playlists.map { playlist -> playlist.name }.toTypedArray()
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Playlists")
+            .setItems(playlistNames) { dialog, which ->
+                Log.d("test","which : ${playlists[which]}")
+                playlists[which].id?.let {
+                    viewModel.addSongToPlaylist(song,it)
+                }
+            }
+            .show()
     }
 
 }

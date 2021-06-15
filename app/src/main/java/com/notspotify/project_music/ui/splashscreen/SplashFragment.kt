@@ -44,7 +44,7 @@ class SplashFragment : Fragment() {
             override fun run() {
                 super.run()
                 try {
-                    Thread.sleep(1000)
+                    sleep(1000)
                     splashViewModel.isConnected()
                 }catch (e:Exception){
                     Log.v("test","e : $e")

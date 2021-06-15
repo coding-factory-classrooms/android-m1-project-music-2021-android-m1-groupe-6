@@ -17,6 +17,7 @@ import com.notspotify.project_music.R
 import com.notspotify.project_music.api.RetrofitFactory
 import com.notspotify.project_music.api.service.APISong
 import com.notspotify.project_music.common.makeToast
+import com.notspotify.project_music.dal.DatabaseFactory
 import com.notspotify.project_music.factory.PlayerViewModelFactory
 import com.notspotify.project_music.model.Song
 import com.notspotify.project_music.ui.main.player.viewmodel.PlayerViewModelState
@@ -44,7 +45,7 @@ class Player : Fragment() {
 
         viewModel = ViewModelProvider(
             this,
-            PlayerViewModelFactory(RetrofitFactory(requireContext()).createService(APISong::class.java),activity?.application!!)
+            PlayerViewModelFactory(RetrofitFactory(requireContext()).createService(APISong::class.java),activity?.application!!,DatabaseFactory.create(requireContext()).songDAO())
         ).get(PlayerViewModel::class.java)
 
         viewModel.getStateListSong().observe(viewLifecycleOwner, Observer { updateUI(it) })
@@ -67,17 +68,19 @@ class Player : Fragment() {
         })
 
 
-        arguments.let {
+        arguments?.also {
 
-            it?.get("songId")?.let {
+            it.get("songId")?.let {
                 val song: Song = it as Song
                 viewModel.getArtisSongsBySong(song)
             }
 
-            it?.getLong("playlistId")?.let {
+            it.getLong("playlistId")?.let {
                 viewModel.getSongsPlaylistId(it)
             }
 
+        } ?: run {
+            viewModel.loadLastSongListen()
         }
 
 
