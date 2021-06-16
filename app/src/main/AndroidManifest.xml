@@ -12,7 +12,9 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.Project_music">
-        <activity android:name="com.notspotify.project_music.MainActivity">
+        <activity android:name="com.notspotify.project_music.MainActivity"
+            android:screenOrientation="portrait">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

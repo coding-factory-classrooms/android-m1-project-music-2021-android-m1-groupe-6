@@ -43,7 +43,25 @@
                 android:text="Library"
                 android:textSize="24sp"
                 android:textStyle="bold" />
+
         </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
+        <EditText
+            android:id="@+id/editTextTextPersonName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_radius"
+            android:ems="10"
+            android:hint="Search"
+            android:inputType="textPersonName"
+            android:padding="12dp"
+            android:textColor="@color/Aubergine"
+            android:textColorHint="@color/Lilac"
+            android:textSize="16dp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerArtists"
