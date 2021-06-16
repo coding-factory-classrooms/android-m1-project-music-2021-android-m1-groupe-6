@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UserProfile">
+    tools:context=".ui.main.userProfile.UserProfile">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -55,12 +55,12 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/topSongsRecycler"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:orientation="horizontal"
-                tools:itemCount="5"
-                tools:listitem="@layout/song"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                android:layout_centerVertical="true"/>
+                tools:itemCount="5"
+                tools:listitem="@layout/songbox" />
         </LinearLayout>
 
         <Space

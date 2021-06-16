@@ -37,6 +37,7 @@ class SongsAdapter (val songs: List<Song>,private val onSongClickListener: OnSon
 
         Glide.with(holder.itemView)
             .load(albumCover)
+            .centerCrop()
             .into(holder.binding.songPicture)
     }
 

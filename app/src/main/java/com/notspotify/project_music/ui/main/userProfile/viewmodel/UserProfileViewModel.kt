@@ -8,6 +8,7 @@ import com.notspotify.project_music.api.service.APIArtist
 import com.notspotify.project_music.api.service.APISong
 import com.notspotify.project_music.dal.dao.PlaylistDAO
 import com.notspotify.project_music.dal.dao.SongStatDAO
+import com.notspotify.project_music.model.Artist
 import com.notspotify.project_music.model.Song
 import retrofit2.Call
 import retrofit2.Callback
@@ -19,10 +20,10 @@ sealed class StatsState{
 
 class UserProfileViewModel(private val apiSongs: APISong, private val apiArtist: APIArtist, private val playlistDAO: PlaylistDAO, private val songStatDAO: SongStatDAO) : ViewModel() {
 
-    private val songs = mutableListOf<Song>()
-    private var songsState: MutableLiveData<List<Song>> = MutableLiveData()
+    private val songs = mutableListOf<Pair<Song, Artist>>()
+    private var songsState: MutableLiveData<List<Pair<Song, Artist>>> = MutableLiveData()
     private var statsState: MutableLiveData<StatsState> = MutableLiveData()
-    fun getSongsState(): LiveData<List<Song>> = songsState
+    fun getSongsState(): LiveData<List<Pair<Song, Artist>>> = songsState
     fun getStatsState(): LiveData<StatsState> = statsState
 
     fun loadStats(){
@@ -39,9 +40,24 @@ class UserProfileViewModel(private val apiSongs: APISong, private val apiArtist:
             apiSongs.getSongByID(it.songId).enqueue(object : Callback<Song>{
                 override fun onResponse(call: Call<Song>, response: Response<Song>) {
                     response.body()?.let { song ->
-                        synchronizeList(nbRequest,song)?.let { listSong ->
-                            songsState.value = listSong.sortedBy { songsInDB.map{ song-> song.songId}.indexOf(it.id) }
-                        }
+                        apiArtist.getArtistsById(song.artist).enqueue(object: Callback<Artist>{
+                            override fun onResponse(
+                                call: Call<Artist>,
+                                response: Response<Artist>
+                            ) {
+                                response.body()?.let { artist ->
+                                    synchronizeList(nbRequest,song,artist)?.let { listSong ->
+                                        songsState.value = listSong.sortedBy { songsInDB.map{ song-> song.songId}.indexOf(it.first.id) }
+                                    }
+                                }
+                            }
+
+                            override fun onFailure(call: Call<Artist>, t: Throwable) {
+
+                            }
+
+                        })
+
                     }
                 }
 
@@ -53,9 +69,9 @@ class UserProfileViewModel(private val apiSongs: APISong, private val apiArtist:
         }
     }
 
-    fun synchronizeList(max:Int, song:Song) : List<Song>?{
+    fun synchronizeList(max:Int, song:Song, artist:Artist) : List<Pair<Song, Artist>>?{
         if(songs.size != max){
-            songs.add(song)
+            songs.add(Pair(song,artist))
             if(songs.size == max){
                 return songs
             }

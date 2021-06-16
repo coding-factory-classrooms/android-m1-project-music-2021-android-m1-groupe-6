@@ -54,7 +54,6 @@ class Player : Fragment() {
 
 
         viewModel.getIsPlaying().observe(viewLifecycleOwner, {
-
             if(it){
                 playIcon.setBackgroundResource(R.drawable.pauseicon)
             }else{

@@ -1,6 +1,7 @@
 package com.notspotify.project_music
 
 import android.app.Application
+import android.util.Log
 import com.notspotify.project_music.model.Song
 import kotlinx.coroutines.*
 import java.io.File
@@ -28,12 +29,15 @@ class CacheSong(val application: Application) {
                 try {
                     file.writeBytes(byteArray)
                 }catch (e:Exception){
-
+                    Log.d("test","error : $e")
                 }
 
 
                 withContext(Dispatchers.Main){
-                    onSaveFinish.invoke(file)
+                    if(file.exists() && file.readBytes().isNotEmpty()){
+                        onSaveFinish.invoke(file)
+                    }
+
                 }
             }
         }
@@ -65,7 +69,7 @@ class CacheSong(val application: Application) {
                     try{
                         f.delete()
                     }catch (e:Exception){
-
+                        Log.d("test","error dekete : $e")
                     }
                 }
             }

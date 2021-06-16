@@ -10,17 +10,17 @@
 
     <item
         android:id="@+id/playlist"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@drawable/playlisticon"
         android:title="Playlists" />
 
     <item
         android:id="@+id/player"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@drawable/playericon"
         android:title="Player" />
 
     <item
         android:id="@+id/userProfile"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@drawable/profileicon"
         android:title="Profile" />
 
 </menu>

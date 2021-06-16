@@ -97,6 +97,7 @@ class PlayerViewModel(private val apiArtist: APIArtist, private val apiSong: API
 
     fun changeActualSong(index: Int) {
         songStateSystem.saveStats()
+
         actualSongIndex = index
         val song = listSong[index]
         songStateSystem.setSong(song)
@@ -106,7 +107,11 @@ class PlayerViewModel(private val apiArtist: APIArtist, private val apiSong: API
         actualSongState.value = PlayerViewModelState.ChangeSong(song)
         isPlaying.value = false
 
-        mediaPlayer.reset()
+        try {
+            mediaPlayer.reset()
+        }catch (e:Exception){
+
+        }
 
 
         val songFile : File? = cacheSong.load(song)
@@ -114,15 +119,20 @@ class PlayerViewModel(private val apiArtist: APIArtist, private val apiSong: API
         songFile?.also {
             addSongToMediaplayer(it)
         }?: run{
-            musicDownloader.startDownload(song,viewModelScope,object : OnDownloadFinish{
-                override fun invoke(byteArray: ByteArray) {
-                    cacheSong.save(song,byteArray,viewModelScope,object : OnSaveFinish{
-                        override fun invoke(file: File) {
-                            addSongToMediaplayer(file)
-                        }
-                    })
-                }
-            })
+            songStorageSystem.loadSong(song)?.also {
+                addSongToMediaplayer(it)
+            }?: run {
+                musicDownloader.startDownload(song,viewModelScope,object : OnDownloadFinish{
+                    override fun invoke(byteArray: ByteArray) {
+                        cacheSong.save(song,byteArray,viewModelScope,object : OnSaveFinish{
+                            override fun invoke(file: File) {
+                                addSongToMediaplayer(file)
+                            }
+                        })
+                    }
+                })
+            }
+
         }
 
         saveLastSongListen()
@@ -229,8 +239,11 @@ class PlayerViewModel(private val apiArtist: APIArtist, private val apiSong: API
 
     private fun addSongToMediaplayer(){
         mediaPlayer.start()
-        progressHandler.post(progressHandlerRunable)
-        isPlaying.value = true
+        if(mediaPlayer.isPlaying){
+            progressHandler.post(progressHandlerRunable)
+            isPlaying.value = true
+        }
+
     }
 
     fun destroyPlayer(){
