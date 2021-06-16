@@ -10,21 +10,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.notspotify.project_music.api.service.APISong
 import com.notspotify.project_music.model.Song
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.FileOutputStream
-import java.io.InputStream
 import android.app.Application
 import android.content.Context
+import com.notspotify.project_music.*
 import com.notspotify.project_music.api.service.APIArtist
 import com.notspotify.project_music.dal.dao.PlaylistDAO
 import com.notspotify.project_music.dal.dao.SongDAO
 import com.notspotify.project_music.dal.dao.SongStatDAO
 import com.notspotify.project_music.dal.entity.SongStatEntity
 import com.notspotify.project_music.model.Artist
-import kotlinx.coroutines.*
 import java.io.File
 import java.lang.Runnable
 
@@ -45,19 +42,13 @@ const val PLAYLIST_PREF = "playlistId"
 
 class PlayerViewModel(private val apiArtist: APIArtist, private val apiSong: APISong, val application: Application, private val songDAO: SongDAO, private val playlistDAO: PlaylistDAO, private val songStatDAO: SongStatDAO) : ViewModel() {
 
-    private val filesPath = "${application.filesDir.absolutePath}/"
-
     private val mediaPlayer = MediaPlayer()
     private val progressHandler = Handler(Looper.getMainLooper())
     private val progressHandlerRunable: Runnable
 
-    private lateinit var downloadCoroutine: Job
-
     private var listSong = mutableListOf<Song>()
     private var actualSongIndex: Int = 0
 
-    private var timeListen: Int = 0
-    private var actualSong: Song? = null
     private var playlistName: String? = null
 
     private val stateListSong = MutableLiveData<PlayerViewModelState>()
@@ -74,10 +65,15 @@ class PlayerViewModel(private val apiArtist: APIArtist, private val apiSong: API
     fun getArtist(): LiveData<Artist> = artist
     fun getTitle(): LiveData<String> = title
 
+    private val musicDownloader: MusicDownloader = MusicDownloader(apiSong)
+    private val cacheSong: CacheSong = CacheSong(application)
+    private val songStorageSystem: SongStorageSystem = SongStorageSystem(10,application)
+    private val songStateSystem: SongStateSystem = SongStateSystem(songStatDAO)
+
     init {
 
         mediaPlayer.setOnCompletionListener {
-            nextSong()
+            //nextSong()
         }
 
         progressHandlerRunable = Runnable{
@@ -100,15 +96,10 @@ class PlayerViewModel(private val apiArtist: APIArtist, private val apiSong: API
     }
 
     fun changeActualSong(index: Int) {
-        Log.d("test","CHANGE SONG")
-        actualSong?.let {
-            saveSongStat(it.id)
-        }
-        timeListen = 0
+        songStateSystem.saveStats()
         actualSongIndex = index
         val song = listSong[index]
-
-        actualSong = song
+        songStateSystem.setSong(song)
 
         changeArtist(song.artist)
 
@@ -117,15 +108,23 @@ class PlayerViewModel(private val apiArtist: APIArtist, private val apiSong: API
 
         mediaPlayer.reset()
 
-        stopDownload()
 
-        val file = File(getSongPath(song))
+        val songFile : File? = cacheSong.load(song)
 
-        if(file.exists()){
-            runSongFilePath(file.absolutePath)
-        }else{
-            loadSongCoroutine(song)
+        songFile?.also {
+            addSongToMediaplayer(it)
+        }?: run{
+            musicDownloader.startDownload(song,viewModelScope,object : OnDownloadFinish{
+                override fun invoke(byteArray: ByteArray) {
+                    cacheSong.save(song,byteArray,viewModelScope,object : OnSaveFinish{
+                        override fun invoke(file: File) {
+                            addSongToMediaplayer(file)
+                        }
+                    })
+                }
+            })
         }
+
         saveLastSongListen()
     }
 
@@ -218,7 +217,7 @@ class PlayerViewModel(private val apiArtist: APIArtist, private val apiSong: API
         if(mediaPlayer.isPlaying){
             pauseSong()
         }else{
-            playSong()
+            addSongToMediaplayer()
         }
     }
 
@@ -228,7 +227,7 @@ class PlayerViewModel(private val apiArtist: APIArtist, private val apiSong: API
         progressHandler.removeCallbacks(progressHandlerRunable)
     }
 
-    private fun playSong(){
+    private fun addSongToMediaplayer(){
         mediaPlayer.start()
         progressHandler.post(progressHandlerRunable)
         isPlaying.value = true
@@ -244,10 +243,8 @@ class PlayerViewModel(private val apiArtist: APIArtist, private val apiSong: API
         } catch (e: Exception) {
             Log.d("test", "Erreur mediaplayer : $e")
         }
-        actualSong?.let {
-            saveSongStat(it.id)
-        }
-
+        songStateSystem.saveStats()
+        cacheSong.destroy()
     }
 
     fun changeSongTimeStamp(time:Int){
@@ -257,70 +254,11 @@ class PlayerViewModel(private val apiArtist: APIArtist, private val apiSong: API
 
     fun updateSongProgression(){
         songProgression.value = mediaPlayer.currentPosition
-        timeListen++
+        songStateSystem.addTimeListen()
         progressHandler.postDelayed(progressHandlerRunable,1000)
     }
 
     // Songs File
-
-    fun saveFile(body: ResponseBody?, path: String):String{
-        if (body==null)
-            return ""
-        var input: InputStream? = null
-        try {
-            input = body.byteStream()
-
-            val fos = FileOutputStream(path)
-            fos.use { output ->
-                val buffer = ByteArray(4 * 1024) // or other buffer size
-                var read: Int
-                while (input.read(buffer).also { read = it } != -1) {
-                    output.write(buffer, 0, read)
-                }
-                output.flush()
-            }
-            return path
-        }catch (e:Exception){
-            Log.e("saveFile",e.toString())
-        }
-        finally {
-            input?.close()
-        }
-        return ""
-    }
-
-    private fun getSongPath(song:Song):String{
-        return "${filesPath}${song.id}_${song.artist}"
-    }
-
-    private fun runSongFilePath(path: String){
-        mediaPlayer.setDataSource(path)
-        mediaPlayer.prepareAsync()
-
-        mediaPlayer.setOnPreparedListener {
-            playSong()
-        }
-
-        songProgression.value = mediaPlayer.currentPosition
-    }
-
-    private fun loadSongCoroutine(song:Song){
-        downloadCoroutine = viewModelScope.launch(Dispatchers.IO) {
-            val responseBody=apiSong.downloadFile(song.file).body()
-            val path = saveFile(responseBody,getSongPath(song))
-            withContext(Dispatchers.Main){
-                runSongFilePath(path)
-            }
-        }
-    }
-
-    private fun stopDownload(){
-        if(!this::downloadCoroutine.isInitialized) return
-
-        if(downloadCoroutine.isActive){
-            downloadCoroutine.cancel()
-        }
-    }
 
     private fun saveLastSongListen(){
         application.getSharedPreferences("LAST_SONG", Context.MODE_PRIVATE).edit().putLong(SONG_PREF,listSong[actualSongIndex].id).apply()
@@ -342,8 +280,14 @@ class PlayerViewModel(private val apiArtist: APIArtist, private val apiSong: API
          }
     }
 
-    fun saveSongStat(songId: Long){
-        Log.d("test","SAVE")
-        songStatDAO.addCountStat(SongStatEntity(null,songId,timeListen,1))
+    private fun addSongToMediaplayer(file:File){
+        mediaPlayer.setDataSource(file.absolutePath)
+        mediaPlayer.prepareAsync()
+
+        mediaPlayer.setOnPreparedListener {
+            addSongToMediaplayer()
+        }
+
+        songProgression.value = mediaPlayer.currentPosition
     }
 }
