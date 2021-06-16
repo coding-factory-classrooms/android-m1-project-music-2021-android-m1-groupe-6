@@ -13,5 +13,5 @@ data class SongEntity(
     @ColumnInfo(name = "file") val file: String,
     @ColumnInfo(name = "duration") val duration: Int,
     @ColumnInfo(name = "created_at") val created_at: String,
-    @ColumnInfo(name = "artist") val artist : Long
+    @ColumnInfo(name = "artist") val artist : Long,
 )

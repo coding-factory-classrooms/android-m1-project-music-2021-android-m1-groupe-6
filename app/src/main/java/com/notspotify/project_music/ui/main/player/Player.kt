@@ -44,7 +44,7 @@ class Player : Fragment() {
 
         viewModel = ViewModelProvider(
             this,
-            PlayerViewModelFactory(RetrofitFactory(requireContext()).createService(APIArtist::class.java),RetrofitFactory(requireContext()).createService(APISong::class.java),activity?.application!!,DatabaseFactory.create(requireContext()).songDAO(),DatabaseFactory.create(requireContext()).playlistDAO())
+            PlayerViewModelFactory(RetrofitFactory(requireContext()).createService(APIArtist::class.java),RetrofitFactory(requireContext()).createService(APISong::class.java),activity?.application!!,DatabaseFactory.create(requireContext()).songDAO(),DatabaseFactory.create(requireContext()).playlistDAO(),DatabaseFactory.create(requireContext()).songStateDAO())
         ).get(PlayerViewModel::class.java)
 
         viewModel.getStateListSong().observe(viewLifecycleOwner, Observer { updateUI(it) })

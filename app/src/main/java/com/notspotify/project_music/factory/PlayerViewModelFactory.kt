@@ -7,6 +7,7 @@ import com.notspotify.project_music.api.service.APIArtist
 import com.notspotify.project_music.api.service.APISong
 import com.notspotify.project_music.dal.dao.PlaylistDAO
 import com.notspotify.project_music.dal.dao.SongDAO
+import com.notspotify.project_music.dal.dao.SongStatDAO
 import com.notspotify.project_music.ui.main.player.viewmodel.PlayerViewModel
 
 @Suppress("UNCHECKED_CAST")
@@ -15,10 +16,11 @@ class PlayerViewModelFactory(
     private val apiSong: APISong,
     private val application: Application,
     private val songDAO: SongDAO,
-    private val playlistDAO: PlaylistDAO
+    private val playlistDAO: PlaylistDAO,
+    private val songStatDAO: SongStatDAO
     ) : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return PlayerViewModel(apiArtist,apiSong,application,songDAO,playlistDAO) as T
+        return PlayerViewModel(apiArtist,apiSong,application,songDAO,playlistDAO,songStatDAO) as T
     }
 }

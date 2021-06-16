@@ -21,6 +21,8 @@ import android.content.Context
 import com.notspotify.project_music.api.service.APIArtist
 import com.notspotify.project_music.dal.dao.PlaylistDAO
 import com.notspotify.project_music.dal.dao.SongDAO
+import com.notspotify.project_music.dal.dao.SongStatDAO
+import com.notspotify.project_music.dal.entity.SongStatEntity
 import com.notspotify.project_music.model.Artist
 import kotlinx.coroutines.*
 import java.io.File
@@ -41,7 +43,7 @@ const val ARTIST_PREF = "artistId"
 const val SONG_PREF = "songId"
 const val PLAYLIST_PREF = "playlistId"
 
-class PlayerViewModel(private val apiArtist: APIArtist, private val apiSong: APISong, val application: Application, private val songDAO: SongDAO, private val playlistDAO: PlaylistDAO) : ViewModel() {
+class PlayerViewModel(private val apiArtist: APIArtist, private val apiSong: APISong, val application: Application, private val songDAO: SongDAO, private val playlistDAO: PlaylistDAO, private val songStatDAO: SongStatDAO) : ViewModel() {
 
     private val filesPath = "${application.filesDir.absolutePath}/"
 
@@ -53,19 +55,22 @@ class PlayerViewModel(private val apiArtist: APIArtist, private val apiSong: API
 
     private var listSong = mutableListOf<Song>()
     private var actualSongIndex: Int = 0
+
+    private var timeListen: Int = 0
+    private var actualSong: Song? = null
     private var playlistName: String? = null
 
     private val stateListSong = MutableLiveData<PlayerViewModelState>()
     private val isPlaying = MutableLiveData<Boolean>()
     private val songProgression = MutableLiveData<Int>()
-    private val actualSong = MutableLiveData<PlayerViewModelState>()
+    private val actualSongState = MutableLiveData<PlayerViewModelState>()
     private val artist = MutableLiveData<Artist>()
     private val title = MutableLiveData<String>()
 
     fun getIsPlaying(): LiveData<Boolean> = isPlaying
     fun getSongProgression(): LiveData<Int> = songProgression
     fun getStateListSong(): LiveData<PlayerViewModelState> = stateListSong
-    fun getStateActualSong(): LiveData<PlayerViewModelState> = actualSong
+    fun getStateActualSong(): LiveData<PlayerViewModelState> = actualSongState
     fun getArtist(): LiveData<Artist> = artist
     fun getTitle(): LiveData<String> = title
 
@@ -95,12 +100,19 @@ class PlayerViewModel(private val apiArtist: APIArtist, private val apiSong: API
     }
 
     fun changeActualSong(index: Int) {
+        Log.d("test","CHANGE SONG")
+        actualSong?.let {
+            saveSongStat(it.id)
+        }
+        timeListen = 0
         actualSongIndex = index
         val song = listSong[index]
 
+        actualSong = song
+
         changeArtist(song.artist)
 
-        actualSong.value = PlayerViewModelState.ChangeSong(song)
+        actualSongState.value = PlayerViewModelState.ChangeSong(song)
         isPlaying.value = false
 
         mediaPlayer.reset()
@@ -232,6 +244,10 @@ class PlayerViewModel(private val apiArtist: APIArtist, private val apiSong: API
         } catch (e: Exception) {
             Log.d("test", "Erreur mediaplayer : $e")
         }
+        actualSong?.let {
+            saveSongStat(it.id)
+        }
+
     }
 
     fun changeSongTimeStamp(time:Int){
@@ -241,6 +257,7 @@ class PlayerViewModel(private val apiArtist: APIArtist, private val apiSong: API
 
     fun updateSongProgression(){
         songProgression.value = mediaPlayer.currentPosition
+        timeListen++
         progressHandler.postDelayed(progressHandlerRunable,1000)
     }
 
@@ -323,5 +340,10 @@ class PlayerViewModel(private val apiArtist: APIArtist, private val apiSong: API
          }else if (playlistId != -1L){
              getSongsPlaylistId(playlistId, lastSongId)
          }
+    }
+
+    fun saveSongStat(songId: Long){
+        Log.d("test","SAVE")
+        songStatDAO.addCountStat(SongStatEntity(null,songId,timeListen,1))
     }
 }
