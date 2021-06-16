@@ -18,7 +18,10 @@ import java.io.FileOutputStream
 import java.io.InputStream
 import android.app.Application
 import android.content.Context
+import com.notspotify.project_music.api.service.APIArtist
+import com.notspotify.project_music.dal.dao.PlaylistDAO
 import com.notspotify.project_music.dal.dao.SongDAO
+import com.notspotify.project_music.model.Artist
 import kotlinx.coroutines.*
 import java.io.File
 import java.lang.Runnable
@@ -33,11 +36,12 @@ sealed class PlayerViewModelState() {
 
 }
 
+
 const val ARTIST_PREF = "artistId"
 const val SONG_PREF = "songId"
 const val PLAYLIST_PREF = "playlistId"
 
-class PlayerViewModel(private val apiSong: APISong, val application: Application, private val songDAO: SongDAO) : ViewModel() {
+class PlayerViewModel(private val apiArtist: APIArtist, private val apiSong: APISong, val application: Application, private val songDAO: SongDAO, private val playlistDAO: PlaylistDAO) : ViewModel() {
 
     private val filesPath = "${application.filesDir.absolutePath}/"
 
@@ -49,16 +53,21 @@ class PlayerViewModel(private val apiSong: APISong, val application: Application
 
     private var listSong = mutableListOf<Song>()
     private var actualSongIndex: Int = 0
+    private var playlistName: String? = null
 
     private val stateListSong = MutableLiveData<PlayerViewModelState>()
     private val isPlaying = MutableLiveData<Boolean>()
     private val songProgression = MutableLiveData<Int>()
     private val actualSong = MutableLiveData<PlayerViewModelState>()
+    private val artist = MutableLiveData<Artist>()
+    private val title = MutableLiveData<String>()
 
     fun getIsPlaying(): LiveData<Boolean> = isPlaying
     fun getSongProgression(): LiveData<Int> = songProgression
     fun getStateListSong(): LiveData<PlayerViewModelState> = stateListSong
     fun getStateActualSong(): LiveData<PlayerViewModelState> = actualSong
+    fun getArtist(): LiveData<Artist> = artist
+    fun getTitle(): LiveData<String> = title
 
     init {
 
@@ -88,6 +97,8 @@ class PlayerViewModel(private val apiSong: APISong, val application: Application
     fun changeActualSong(index: Int) {
         actualSongIndex = index
         val song = listSong[index]
+
+        changeArtist(song.artist)
 
         actualSong.value = PlayerViewModelState.ChangeSong(song)
         isPlaying.value = false
@@ -146,38 +157,20 @@ class PlayerViewModel(private val apiSong: APISong, val application: Application
 
     }
 
-    fun getSongById(songId : Long) {
-
-        apiSong.getSongByID(songId).enqueue(object : Callback<Song>{
-
-            override fun onResponse(call: Call<Song>, response: Response<Song>) {
-                response.body()?.also { it ->
-                    listSong.add(it)
-                    actualSongIndex = listSong.size - 1
-                    changeActualSong(actualSongIndex)
-
-                    stateListSong.value = PlayerViewModelState.Success(listSong)
-
-                } ?: run {
-                    stateListSong.value = PlayerViewModelState.Failure("list null")
-
-                }
-            }
-
-            override fun onFailure(call: Call<Song>, t: Throwable) {
-                stateListSong.value = PlayerViewModelState.Failure(t.message.toString())
-            }
-
-        })
-    }
-
     fun getSongsPlaylistId(playlistId : Long,songId : Long? = null) {
         listSong.addAll(songDAO.loadSongsByPlaylist(playlistId).map { songDAO -> Song(songDAO.songId,songDAO.name,songDAO.file,songDAO.duration,songDAO.created_at,songDAO.artist) })
         stateListSong.value = PlayerViewModelState.Success(listSong)
+
+         playlistDAO.loadById(playlistId)?.let {
+             playlistName = it.name
+             title.value = it.name
+        }
+
         application.getSharedPreferences("LAST_SONG", Context.MODE_PRIVATE).edit().putLong(
             PLAYLIST_PREF,playlistId).apply()
         application.getSharedPreferences("LAST_SONG", Context.MODE_PRIVATE).edit().putLong(
             ARTIST_PREF,-1).apply()
+
         if(listSong.isNotEmpty()){
             val indexOfSong = listSong.indexOfFirst { _song -> _song.id == songId };
             if(indexOfSong == -1){
@@ -187,6 +180,24 @@ class PlayerViewModel(private val apiSong: APISong, val application: Application
             }
         }
 
+    }
+
+    private fun changeArtist(artistId:Long){
+        apiArtist.getArtistsById(artistId).enqueue(object : Callback<Artist>{
+            override fun onResponse(call: Call<Artist>, response: Response<Artist>) {
+                response.body()?.let {
+                    artist.value = it
+                    if(playlistName == null){
+                        title.value = it.name
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<Artist>, t: Throwable) {
+
+            }
+
+        })
     }
 
     // Media Control
@@ -225,6 +236,7 @@ class PlayerViewModel(private val apiSong: APISong, val application: Application
 
     fun changeSongTimeStamp(time:Int){
         mediaPlayer.seekTo(time)
+        songProgression.value = time
     }
 
     fun updateSongProgression(){
@@ -297,7 +309,7 @@ class PlayerViewModel(private val apiSong: APISong, val application: Application
         application.getSharedPreferences("LAST_SONG", Context.MODE_PRIVATE).edit().putLong(SONG_PREF,listSong[actualSongIndex].id).apply()
     }
 
-     fun loadLastSongListen(){
+    fun loadLastSongListen(){
         val lastSongId:Long = application.getSharedPreferences("LAST_SONG",Context.MODE_PRIVATE).getLong(
             SONG_PREF,-1)
         val artistId:Long = application.getSharedPreferences("LAST_SONG",Context.MODE_PRIVATE).getLong(

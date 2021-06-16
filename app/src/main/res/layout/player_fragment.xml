@@ -6,71 +6,215 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.player.Player">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="290dp"
-        android:layout_height="188dp"
-        android:text="Player"
-        app:layout_constraintBottom_toTopOf="@+id/play"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.172" />
-
-    <Button
-        android:id="@+id/play"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="84dp"
-        android:text="PLAY"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar" />
-
-    <SeekBar
-        android:id="@+id/seekBar"
+    <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="90dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="90dp"
-        app:layout_constraintBottom_toTopOf="@+id/play"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/songName"
-        android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:paddingRight="10dp">
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/chevron_down" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="315dp"
+            android:layout_height="315dp"
+            app:cardCornerRadius="24dp">
+
+            <ImageView
+                android:id="@+id/playerAlbumCover"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:src="@tools:sample/avatars" />
+        </androidx.cardview.widget.CardView>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="30dp" />
+
+        <TextView
+            android:id="@+id/playlistTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Title"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="24dp" />
+
+        <TextView
+            android:id="@+id/songName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="chargement" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="chargement"
-        app:layout_constraintBottom_toTopOf="@+id/seekBar"
+        android:layout_marginBottom="32dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintStart_toStartOf="parent">
 
-    <Button
-        android:id="@+id/previous"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="84dp"
-        android:text="Prev"
-        app:layout_constraintEnd_toStartOf="@+id/play"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar" />
+        <SeekBar
+            android:id="@+id/seekBar"
+            style="@style/Widget.AppCompat.SeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:indeterminate="false" />
 
-    <Button
-        android:id="@+id/next"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="81dp"
-        android:text="Next"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/play"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar" />
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginRight="24dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/actualSeek"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/maxSeek"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/prevBtn"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                app:cardBackgroundColor="@color/Lilac"
+                app:cardCornerRadius="50dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/Lilac">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@color/Lilac"
+                        android:src="@drawable/previcon"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <Space
+                android:layout_width="16dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/playBtn"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                app:cardBackgroundColor="@color/Lilac"
+                app:cardCornerRadius="50dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/Lime">
+
+                    <ImageView
+                        android:id="@+id/playIcon"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@color/Lime"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <Space
+                android:layout_width="16dp"
+                android:layout_height="match_parent" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/nextBtn"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                app:cardBackgroundColor="@color/Lilac"
+                app:cardCornerRadius="50dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/Lilac">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@color/Lilac"
+                        android:src="@drawable/nexticon"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

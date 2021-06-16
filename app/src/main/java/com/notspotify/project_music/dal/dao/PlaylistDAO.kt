@@ -9,6 +9,9 @@ interface PlaylistDAO {
     @Query("SELECT * FROM Playlist")
     fun loadAll(): List<Playlist>
 
+    @Query("SELECT * FROM Playlist WHERE id=:id")
+    fun loadById(id:Long): Playlist?
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(playlist: Playlist): Long
 
