@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.main.userProfile.UserProfile">
-
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,6 +16,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:orientation="vertical"
+        android:gravity="center_horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -33,6 +36,23 @@
                 android:textSize="24sp"
                 android:textStyle="bold" />
         </LinearLayout>
+        <Space
+        android:layout_width="match_parent"
+        android:layout_height="16dp" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="315dp"
+            android:layout_height="315dp"
+
+            app:cardCornerRadius="24dp">
+
+            <ImageView
+                android:id="@+id/profilePicture"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@mipmap/profil_picture_background"
+                 />
+        </androidx.cardview.widget.CardView>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -81,7 +101,7 @@
                 android:textStyle="bold" />
 
             <Space
-                android:layout_width="match_parent"
+                android:layout_width="16dp"
                 android:layout_height="16dp" />
 
             <LinearLayout
@@ -89,34 +109,91 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <TextView
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/statContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Time listen : " />
 
-                <TextView
-                    android:id="@+id/timeListen"
+                    android:background="@color/white"
+                    app:cardCornerRadius="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+                <LinearLayout
+
+                    android:layout_width="141dp"
+                    android:layout_height="141dp"
+                    android:background="@color/white"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="8dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:background="@color/white"
+                        android:id="@+id/timeListen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+
+                        android:textSize="48sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:background="@color/white"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="minutes"
+                        android:textAlignment="center" />
+                </LinearLayout>
+                </androidx.cardview.widget.CardView>
+                <Space
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                   />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/statContainer_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0" />
+
+                    android:background="@color/white"
+                    app:cardCornerRadius="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+                <LinearLayout
+                    android:layout_width="141dp"
+                    android:layout_height="141dp"
+                    android:background="@color/white"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="8dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/nbSongListen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:background="@color/white"
+                        android:textSize="48sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="songs"
+                        android:background="@color/white"
+                        android:textAlignment="center" />
+
+
+                </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Song listen : " />
-
-                <TextView
-                    android:id="@+id/nbSongListen"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0" />
-            </LinearLayout>
 
         </LinearLayout>
 
@@ -159,5 +236,5 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
+</ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -24,6 +24,7 @@ import com.notspotify.project_music.ui.main.profile.viewmodel.adapter.OnSongClic
 import com.notspotify.project_music.ui.main.profile.viewmodel.adapter.SongsAdapter
 import com.notspotify.project_music.ui.main.userProfile.viewmodel.adapter.SongBoxAdapter
 import kotlinx.android.synthetic.main.user_profile_fragment.*
+import kotlinx.android.synthetic.main.stats_fragment.*
 
 
 class UserProfile : Fragment() {
