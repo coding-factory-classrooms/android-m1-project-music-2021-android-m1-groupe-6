@@ -47,7 +47,7 @@ class UserProfile : Fragment() {
             RetrofitFactory(requireContext())
                 .createService(APISong::class.java), RetrofitFactory(requireContext())
                 .createService(APIArtist::class.java),
-            DatabaseFactory.create(requireContext()).playlistDAO(),
+            activity?.application!!,
             DatabaseFactory.create(requireContext()).songStateDAO())
         ).get(UserProfileViewModel::class.java)
 
@@ -85,6 +85,10 @@ class UserProfile : Fragment() {
                 }
             }
         })
+
+        maxStorageBtn.setOnClickListener {
+            viewModel.changeMaxStorage(maxStorage.text.toString().toInt())
+        }
 
     }
 

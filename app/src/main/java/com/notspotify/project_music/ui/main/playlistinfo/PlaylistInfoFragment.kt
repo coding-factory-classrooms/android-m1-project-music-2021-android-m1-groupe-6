@@ -12,9 +12,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.notspotify.project_music.MusicDownloader
 import com.notspotify.project_music.R
+import com.notspotify.project_music.SongStorageFactory
 import com.notspotify.project_music.SongStorageSystem
 import com.notspotify.project_music.api.RetrofitFactory
 import com.notspotify.project_music.api.service.APISong
+import com.notspotify.project_music.common.makeToast
 import com.notspotify.project_music.dal.DatabaseFactory
 import com.notspotify.project_music.factory.PlaylistInfoViewModelFactory
 import com.notspotify.project_music.factory.PlaylistViewModelFactory
@@ -23,6 +25,7 @@ import com.notspotify.project_music.model.Song
 import com.notspotify.project_music.ui.main.playlist.viewmodel.PlaylistViewModel
 import com.notspotify.project_music.ui.main.playlistinfo.viewmodel.DownloadState
 import com.notspotify.project_music.ui.main.playlistinfo.viewmodel.PlaylistInfoViewModel
+import com.notspotify.project_music.ui.main.playlistinfo.viewmodel.SongAndDownLoad
 import com.notspotify.project_music.ui.main.profile.viewmodel.adapter.OnSongClickListener
 import com.notspotify.project_music.ui.main.profile.viewmodel.adapter.SongsAdapter
 import kotlinx.android.synthetic.main.playlist_info_fragment.*
@@ -52,7 +55,7 @@ class PlaylistInfoFragment : Fragment() {
             PlaylistInfoViewModelFactory(
                 DatabaseFactory.create(requireContext()).playlistDAO(),
                 DatabaseFactory.create(requireContext()).songDAO(),
-                SongStorageSystem(0,activity?.application!!),
+                SongStorageFactory(requireContext(),activity?.application!!).create(),
                 MusicDownloader(RetrofitFactory(requireContext()).createService(APISong::class.java))
             )
         ).get(PlaylistInfoViewModel::class.java)
@@ -81,10 +84,18 @@ class PlaylistInfoFragment : Fragment() {
         viewModel.getDownloadingState().observe(viewLifecycleOwner,{
             when(it){
                 is DownloadState.Added -> {
-                    Log.d("test","ADDED")
+                    nbSongSave.text = it.songsAndDownLoad.filter { songAndDownLoad -> songAndDownLoad.isDownloaded }.size.toString()
                 }
                 is DownloadState.IsDownloading -> {
-                    Log.d("test","is downloading : ${it.isDownloading}")
+                    if(it.isDownloading) {
+                        downloadBtn.text = "Cancel"
+                    }else{
+                        downloadBtn.text = "Download"
+                    }
+
+                }
+                is DownloadState.Error -> {
+                    makeToast(it.errorMessage)
                 }
             }
         })
@@ -102,14 +113,16 @@ class PlaylistInfoFragment : Fragment() {
         }
 
         downloadBtn.setOnClickListener {
-            viewModel.downloadSongs()
+            viewModel.toggleDownload()
         }
 
     }
-    private fun updateSongList(songs:List<Song>){
+    private fun updateSongList(songsAndDownLoad :List<SongAndDownLoad>){
         listSongs.clear()
-        listSongs.addAll(songs)
+        listSongs.addAll(songsAndDownLoad.map { songAndDownLoad-> songAndDownLoad.song})
         songsAdapter.notifyDataSetChanged()
+        nbSongs.text = songsAndDownLoad.size.toString()
+        nbSongSave.text = songsAndDownLoad.filter { songAndDownLoad -> songAndDownLoad.isDownloaded }.size.toString()
     }
 
 }

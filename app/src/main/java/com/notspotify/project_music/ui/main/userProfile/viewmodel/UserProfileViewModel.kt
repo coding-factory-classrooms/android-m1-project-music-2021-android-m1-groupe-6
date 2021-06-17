@@ -1,5 +1,7 @@
 package com.notspotify.project_music
 
+import android.app.Application
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,6 +12,7 @@ import com.notspotify.project_music.dal.dao.PlaylistDAO
 import com.notspotify.project_music.dal.dao.SongStatDAO
 import com.notspotify.project_music.model.Artist
 import com.notspotify.project_music.model.Song
+import com.notspotify.project_music.ui.main.player.viewmodel.PLAYLIST_PREF
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,7 +21,7 @@ sealed class StatsState{
     data class Success(val totalTimeCount: Int, val totalPlayCount:Int): StatsState()
 }
 
-class UserProfileViewModel(private val apiSongs: APISong, private val apiArtist: APIArtist, private val playlistDAO: PlaylistDAO, private val songStatDAO: SongStatDAO) : ViewModel() {
+class UserProfileViewModel(private val apiSongs: APISong, private val apiArtist: APIArtist, private val application: Application, private val songStatDAO: SongStatDAO) : ViewModel() {
 
     private val songs = mutableListOf<Pair<Song, Artist>>()
     private var songsState: MutableLiveData<List<Pair<Song, Artist>>> = MutableLiveData()
@@ -77,6 +80,11 @@ class UserProfileViewModel(private val apiSongs: APISong, private val apiArtist:
             }
         }
         return null
+    }
+
+    fun changeMaxStorage(value:Int){
+        application.getSharedPreferences("STORAGE", Context.MODE_PRIVATE).edit().putInt(
+            "maxSize",value * 1000000).apply()
     }
 
 }

@@ -15,7 +15,10 @@ import com.notspotify.project_music.R
 import com.notspotify.project_music.common.makeToast
 import com.notspotify.project_music.dal.DatabaseFactory
 import com.notspotify.project_music.dal.entity.Playlist
+import com.notspotify.project_music.dal.entity.SongEntity
 import com.notspotify.project_music.factory.PlaylistViewModelFactory
+import com.notspotify.project_music.model.Song
+import com.notspotify.project_music.ui.main.playlist.viewmodel.PlaylistInfo
 import com.notspotify.project_music.ui.main.playlist.viewmodel.PlaylistState
 import com.notspotify.project_music.ui.main.playlist.viewmodel.adapter.OnPlaylistClickListener
 import com.notspotify.project_music.ui.main.playlist.viewmodel.adapter.PlaylistAdapter
@@ -24,7 +27,7 @@ import kotlinx.android.synthetic.main.playlist_fragment.*
 class Playlist : Fragment() {
     private lateinit var viewModel: PlaylistViewModel
 
-    private var listPlaylist = mutableListOf<Playlist>()
+    private var listPlaylist = mutableListOf<PlaylistInfo>()
     private lateinit var playlistAdapter: PlaylistAdapter
 
     override fun onCreateView(
@@ -71,7 +74,7 @@ class Playlist : Fragment() {
             }
             is PlaylistState.Success -> {
                 listPlaylist.clear()
-                listPlaylist.addAll(state.playlists)
+                listPlaylist.addAll(state.playlistsInfo)
                 playlistAdapter.notifyDataSetChanged()
             }
         }

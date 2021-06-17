@@ -40,7 +40,7 @@ const val ARTIST_PREF = "artistId"
 const val SONG_PREF = "songId"
 const val PLAYLIST_PREF = "playlistId"
 
-class PlayerViewModel(private val apiArtist: APIArtist, private val apiSong: APISong, val application: Application, private val songDAO: SongDAO, private val playlistDAO: PlaylistDAO, private val songStatDAO: SongStatDAO) : ViewModel() {
+class PlayerViewModel(private val apiArtist: APIArtist, private val apiSong: APISong, val application: Application, private val songDAO: SongDAO, private val playlistDAO: PlaylistDAO, private val songStatDAO: SongStatDAO, private val songStorageSystem: SongStorageSystem ) : ViewModel() {
 
     private val mediaPlayer = MediaPlayer()
     private val progressHandler = Handler(Looper.getMainLooper())
@@ -67,7 +67,6 @@ class PlayerViewModel(private val apiArtist: APIArtist, private val apiSong: API
 
     private val musicDownloader: MusicDownloader = MusicDownloader(apiSong)
     private val cacheSong: CacheSong = CacheSong(application)
-    private val songStorageSystem: SongStorageSystem = SongStorageSystem(10,application)
     private val songStateSystem: SongStateSystem = SongStateSystem(songStatDAO)
 
     init {

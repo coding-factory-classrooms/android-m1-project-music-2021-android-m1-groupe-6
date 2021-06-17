@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.notspotify.project_music.ui.main.player.viewmodel.PlayerViewModel
 import com.notspotify.project_music.R
+import com.notspotify.project_music.SongStorageFactory
 import com.notspotify.project_music.api.RetrofitFactory
 import com.notspotify.project_music.api.service.APIArtist
 import com.notspotify.project_music.api.service.APISong
@@ -44,7 +45,14 @@ class Player : Fragment() {
 
         viewModel = ViewModelProvider(
             this,
-            PlayerViewModelFactory(RetrofitFactory(requireContext()).createService(APIArtist::class.java),RetrofitFactory(requireContext()).createService(APISong::class.java),activity?.application!!,DatabaseFactory.create(requireContext()).songDAO(),DatabaseFactory.create(requireContext()).playlistDAO(),DatabaseFactory.create(requireContext()).songStateDAO())
+            PlayerViewModelFactory(
+                RetrofitFactory(requireContext()).createService(APIArtist::class.java),
+                RetrofitFactory(requireContext()).createService(APISong::class.java),
+                activity?.application!!,
+                DatabaseFactory.create(requireContext()).songDAO(),
+                DatabaseFactory.create(requireContext()).playlistDAO(),
+                DatabaseFactory.create(requireContext()).songStateDAO(),
+                SongStorageFactory(requireContext(),activity?.application!!).create())
         ).get(PlayerViewModel::class.java)
 
         viewModel.getStateListSong().observe(viewLifecycleOwner, Observer { updateUI(it) })

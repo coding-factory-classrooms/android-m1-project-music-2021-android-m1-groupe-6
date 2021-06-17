@@ -3,6 +3,7 @@ package com.notspotify.project_music.factory
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.notspotify.project_music.SongStorageSystem
 import com.notspotify.project_music.api.service.APIArtist
 import com.notspotify.project_music.api.service.APISong
 import com.notspotify.project_music.dal.dao.PlaylistDAO
@@ -17,10 +18,12 @@ class PlayerViewModelFactory(
     private val application: Application,
     private val songDAO: SongDAO,
     private val playlistDAO: PlaylistDAO,
-    private val songStatDAO: SongStatDAO
+    private val songStatDAO: SongStatDAO,
+    private val songStorageSystem: SongStorageSystem,
+
     ) : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return PlayerViewModel(apiArtist,apiSong,application,songDAO,playlistDAO,songStatDAO) as T
+        return PlayerViewModel(apiArtist,apiSong,application,songDAO,playlistDAO,songStatDAO,songStorageSystem) as T
     }
 }

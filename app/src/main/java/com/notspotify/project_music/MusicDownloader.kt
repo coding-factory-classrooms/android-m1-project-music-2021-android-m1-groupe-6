@@ -8,36 +8,48 @@ import okhttp3.ResponseBody
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 
+interface Callback{
+    fun onSongDownloaded(song:Song, byteArray: ByteArray)
+    fun onAllSongsDownloaded()
+}
 interface OnDownloadFinish{
     fun invoke(byteArray: ByteArray)
 }
 
-interface OnAllDownloadFinished{
-    fun invoke()
-}
-
 class MusicDownloader(private val apiSong: APISong) {
 
-    private val jobs: MutableList<Job> = mutableListOf()
+    private var actualJob: Job? = null
 
-    fun startDownload(song: Song, coroutineScope: CoroutineScope, onDownloadFinish: OnDownloadFinish) : Job{
+    fun startDownload(song: Song, coroutineScope: CoroutineScope, callback: OnDownloadFinish){
 
-        val job: Job = coroutineScope.launch(Dispatchers.IO) {
+        actualJob = coroutineScope.launch(Dispatchers.IO) {
+
             val responseBody=apiSong.downloadFile(song.file).body()
             val songData : ByteArray = downloadMusic(responseBody)
 
             withContext(Dispatchers.Main){
-                onDownloadFinish.invoke(songData)
+                callback.invoke(songData)
             }
         }
-        jobs.add(job)
-        return job
+
     }
 
-    private fun removeUnActiveJobs(){
-        jobs.forEach {
-            if(!it.isActive){
-                jobs.remove(it)
+    fun startDownload(songs: List<Song>, coroutineScope: CoroutineScope, callback: Callback){
+
+        Log.d("test","start downlaod : ${songs.size}")
+        actualJob = coroutineScope.launch(Dispatchers.IO) {
+
+            songs.forEach{
+                Log.d("test","start download song : ${it.name}")
+                val responseBody=apiSong.downloadFile(it.file).body()
+                val songData : ByteArray = downloadMusic(responseBody)
+
+                withContext(Dispatchers.Main){
+                    callback.onSongDownloaded(it,songData)
+                }
+            }
+            withContext(Dispatchers.Main){
+                callback.onAllSongsDownloaded()
             }
         }
     }
@@ -69,29 +81,7 @@ class MusicDownloader(private val apiSong: APISong) {
         return fos.toByteArray()
     }
 
-    fun cancel(job:Job){
-        val jobFind:Job? = jobs.find { _job -> _job == job }
-        jobFind?.let {
-            if(it.isActive){
-                it.cancel()
-                jobs.remove(it)
-            }
-        }
-    }
-
-    fun cancelAll(){
-        jobs.forEach { job ->
-            cancel(job)
-        }
-        removeUnActiveJobs()
-    }
-
-    suspend fun checkAllDownloadFinished(onAllDownloadFinished: OnAllDownloadFinished){
-        jobs.forEach {
-            if(it.isActive){
-                it.join()
-            }
-        }
-        onAllDownloadFinished.invoke()
+    fun cancel(){
+        actualJob?.cancel()
     }
 }

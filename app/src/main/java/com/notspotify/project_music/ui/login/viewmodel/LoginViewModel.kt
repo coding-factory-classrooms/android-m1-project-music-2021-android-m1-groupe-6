@@ -32,7 +32,7 @@ class LoginViewModel(private val apiAccount: APIAccount, application: Applicatio
     override fun connection(userName : String, password: String){
 
         state.postValue(LoginFragmentState.Loading(""))
-        apiAccount.getToken(Auth.Request()).enqueue(object : Callback<Auth.Response>{
+        apiAccount.getToken(Auth.Request(userName,password)).enqueue(object : Callback<Auth.Response>{
             override fun onFailure(call: Call<Auth.Response>, t: Throwable) {
                 state.postValue(LoginFragmentState.Failure("${t.message}"))
                 Log.v("test","error : ${t.message}")
