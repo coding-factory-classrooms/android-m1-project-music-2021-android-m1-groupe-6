@@ -51,7 +51,7 @@
 
 
 
-    <string name="emailDejaUtiliser">Cette email est déjà utiliser.</string>
+    <string name="emailDejaUtiliser">Cet email est déjà utilisé.</string>
     <string name="emailMalEcrit">L\'adresse email est mal formatée.</string>
     <string name="emailOuMdpFaux">L\'email ou le mot de passe est incorrect.</string>
     <string name="compteSuspendu">Ce compte à été suspendu par un administrateur.</string>

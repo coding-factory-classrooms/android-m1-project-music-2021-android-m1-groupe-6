@@ -55,7 +55,10 @@
             android:layout_height="wrap_content"
             android:text="Title"
             android:textSize="26sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="160dp"
+            tools:layout_editor_absoluteY="160dp"
+            />
 
         <Space
             android:layout_width="match_parent"

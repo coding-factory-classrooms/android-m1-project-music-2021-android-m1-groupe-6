@@ -9,6 +9,6 @@ object DatabaseFactory{
         return Room.databaseBuilder(
             context,
             AppDatabase::class.java, DB_NAME
-        ).allowMainThreadQueries().build()
+        ).allowMainThreadQueries().fallbackToDestructiveMigration().build()
     }
 }

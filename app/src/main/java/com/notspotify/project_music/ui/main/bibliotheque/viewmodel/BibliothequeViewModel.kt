@@ -38,7 +38,7 @@ class BibliothequeViewModel(private val apiArtist: APIArtist, application: Appli
             }
 
             override fun onResponse(call: Call<List<Artist>>, response: Response<List<Artist>>) {
-                response.body()?.let { state.postValue(BibliothequetState.Success(it)) }
+                response.body()?.let { state.postValue(BibliothequetState.Success(it.filter { artist ->  artist.genre_name == "Lo-Fi" })) }
                     ?: run {  state.postValue(BibliothequetState.Failure("Error")) }
             }
         })

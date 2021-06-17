@@ -10,7 +10,7 @@ import com.notspotify.project_music.dal.entity.SongEntity
 import com.notspotify.project_music.dal.entity.SongStatEntity
 
 const val DB_NAME = "lofify.db"
-@Database(entities = [Playlist::class, SongEntity::class,SongStatEntity::class], version = 1)
+@Database(entities = [Playlist::class, SongEntity::class,SongStatEntity::class], version = 2)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun playlistDAO(): PlaylistDAO
     abstract fun songDAO(): SongDAO
